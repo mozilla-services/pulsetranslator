@@ -266,10 +266,14 @@ class PulseBuildbotTranslator(object):
                         builddata['platform'] = messageparams.guess_platform(key)
                         if not builddata['platform']:
                             raise BadPulseMessageError(key, 'no "platform" property')
-                otherRe = re.compile(r'build\.((release-|jetpack-)?(%s)[-|_](xulrunner[-|_])?(%s)([-|_]?)(.*?))\.(\d+)\.finished' %
+                otherRe = re.compile(r'build\.((release-|jetpack-)?(%s)[-|_](xulrunner[-|_])?(%s)([-|_]?)(.*?))\.(\d+)\.(log_uploaded|finished)' %
                                      (builddata['tree'], builddata['platform']))
                 match = otherRe.match(key)
                 if match:
+                    if 'log_uploaded' in match.group(9):
+                        # we only care about 'finished' message for builds
+                        return
+
                     builddata['tags'] = match.group(7).replace('_', '-').split('-')
 
                     # There are some tags we don't care about as tags,
