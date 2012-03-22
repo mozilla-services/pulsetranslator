@@ -26,7 +26,7 @@ class PulseBuildbotTranslator(object):
     def __init__(self, logdir='logs'):
         self.label = 'pulse-build-translator-%s' % socket.gethostname()
         self.pulse = consumers.BuildConsumer(applabel=self.label)
-        self.pulse.configure(topic='#.finished',
+        self.pulse.configure(topic=['#.finished', '#.log_uploaded'],
                              callback=self.on_pulse_message,
                              durable=False)
         self.queue = Queue()
@@ -63,6 +63,8 @@ class PulseBuildbotTranslator(object):
 
     def process_unittest(self, data):
         data['insertion_time'] = calendar.timegm(time.gmtime())
+        if not data.get('logurl'):
+            raise NoLogUrlError(data['key'])
         if data['platform'] not in messageparams.platforms:
             raise BadPlatformError(data['key'], data['platform'])
         elif data['os'] not in messageparams.platforms[data['platform']]:
@@ -159,6 +161,10 @@ class PulseBuildbotTranslator(object):
                 elif property[0] in ['packageUrl', 'build_url', 'fileURL']:
                     builddata['buildurl'] = property[1]
 
+                # look for log url
+                elif property[0] == 'log_url':
+                    builddata['logurl'] = property[1]
+
                 # look for release name
                 elif property[0] in ['en_revision', 'script_repo_revision']:
                     builddata['release'] = property[1]
@@ -191,11 +197,16 @@ class PulseBuildbotTranslator(object):
                 builddata['buildtype'] = 'pgo'
 
             # see if this message is for a unittest
-            unittestRe = re.compile(r'build\.((%s)[-|_](.*?)(-debug|-o-debug|-pgo|_pgo|_test)?[-|_](test|unittest|pgo)-(.*?))\.(\d+)\.' %
+            unittestRe = re.compile(r'build\.((%s)[-|_](.*?)(-debug|-o-debug|-pgo|_pgo|_test)?[-|_](test|unittest|pgo)-(.*?))\.(\d+)\.(log_uploaded|finished)' %
                                     builddata['tree'])
             match = unittestRe.match(key)
             if match:
                 # for unittests, generate some metadata by parsing the key
+
+                if match.groups()[7] == 'finished':
+                    # Ignore this message, we only care about 'log_uploaded'
+                    # messages for unittests.
+                    return
 
                 # The 'short_builder' string is quite arbitrary, and so this
                 # code is expected to be fragile, and will likely need
@@ -221,11 +232,6 @@ class PulseBuildbotTranslator(object):
  
                 if stage_platform:
                     builddata['platform'] = stage_platform
-
-                if builddata['buildurl']:
-                    builddata['logurl'] = '%s/%s-build%s.txt.gz' % \
-                        (os.path.dirname(builddata['buildurl']),
-                         short_builder, builddata['buildnumber'])
 
                 self.process_unittest(builddata)
             elif 'source' in key:
@@ -260,7 +266,7 @@ class PulseBuildbotTranslator(object):
                         builddata['platform'] = messageparams.guess_platform(key)
                         if not builddata['platform']:
                             raise BadPulseMessageError(key, 'no "platform" property')
-                otherRe = re.compile(r'build\.((release-|jetpack-)?(%s)[-|_](xulrunner[-|_])?(%s)([-|_]?)(.*?))\.(\d+)\.' %
+                otherRe = re.compile(r'build\.((release-|jetpack-)?(%s)[-|_](xulrunner[-|_])?(%s)([-|_]?)(.*?))\.(\d+)\.finished' %
                                      (builddata['tree'], builddata['platform']))
                 match = otherRe.match(key)
                 if match:
@@ -291,6 +297,6 @@ class PulseBuildbotTranslator(object):
                     raise BadPulseMessageError(key, "unknown message type")
 
         except BadPulseMessageError, inst:
-            self.badPulseMessageLogger.exception(json.dumps(data, indent=2))
+            self.badPulseMessageLogger.exception(json.dumps(data.get('payload'), indent=2))
         except Exception, inst:
             self.errorLogger.exception(json.dumps(data, indent=2))

@@ -11,6 +11,14 @@ class BadPulseMessageError(Exception):
     def __str__(self):
         return "%s, key: %s" % (self.error, self.key)
 
+class NoLogUrlError(BadPulseMessageError):
+
+    def __init__(self, key):
+        self.key = key
+
+    def __str__(self):
+        return self.key
+
 class NoBuildUrlError(BadPulseMessageError):
 
     def __init__(self, key):
