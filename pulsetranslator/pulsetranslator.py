@@ -28,7 +28,7 @@ class PulseBuildbotTranslator(object):
         self.pulse = consumers.BuildConsumer(applabel=self.label)
         self.pulse.configure(topic=['#.finished', '#.log_uploaded'],
                              callback=self.on_pulse_message,
-                             durable=False)
+                             durable=True)
         self.queue = Queue()
         self.logdir = logdir
 
@@ -304,3 +304,4 @@ class PulseBuildbotTranslator(object):
             self.badPulseMessageLogger.exception(json.dumps(data.get('payload'), indent=2))
         except Exception, inst:
             self.errorLogger.exception(json.dumps(data, indent=2))
+
