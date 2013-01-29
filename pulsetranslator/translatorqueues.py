@@ -17,7 +17,7 @@ def publish_message(publisherClass, data, routing_key):
         msg.set_data(key, value)
     publisher.publish(msg)
 
-class TranlsatorPublisher(GenericPublisher):
+class TranslatorPublisher(GenericPublisher):
     def __init__(self, **kwargs):
         GenericPublisher.__init__(self,
                                   PulseConfiguration(**kwargs),

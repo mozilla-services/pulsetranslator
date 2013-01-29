@@ -17,7 +17,7 @@ if python_version < (2,6) or python_version >= (3,0):
 
 setup(name=PACKAGE_NAME,
       version=version,
-      description=("Service for translating rawa buildbot pulse messages into "
+      description=("Service for translating raw buildbot pulse messages into "
                    "a standard format"),
       long_description="""\
 """,

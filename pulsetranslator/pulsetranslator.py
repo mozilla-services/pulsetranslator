@@ -95,7 +95,7 @@ class PulseBuildbotTranslator(object):
                 key_parts.append(tag)
         key_parts.append(original_key)
 
-        publish_message(TranlsatorPublisher, data, '.'.join(key_parts))
+        publish_message(TranslatorPublisher, data, '.'.join(key_parts))
 
     def on_pulse_message(self, data, message):
         key = 'unknown'
@@ -112,15 +112,19 @@ class PulseBuildbotTranslator(object):
             # unittests and builds.
             builddata = { 'key': key,
                           'buildid': None,
+                          'previous_buildid': None,
                           'platform': None,
                           'builddate': None,
                           'buildurl': None,
+                          'locale': None,
                           'logurl': None,
                           'testsurl': None,
                           'release': None,
                           'buildername': None,
+                          'slave': None,
                           'revision': None,
                           'product': None,
+                          'version': None,
                           'tree': None,
                           'timestamp': datetime.datetime.now().strftime('%Y%m%d%H%M%S'),
                         }
@@ -133,22 +137,30 @@ class PulseBuildbotTranslator(object):
                     builddata['revision'] = property[1]
 
                 # look for product
-                if property[0] == 'product':
+                elif property[0] == 'product':
                     builddata['product'] = property[1]
 
+                # look for version
+                elif property[0] == 'appVersion':
+                    builddata['version'] = property[1]
+
                 # look for tree
-                if property[0] == 'branch':
+                elif property[0] == 'branch':
                     builddata['tree'] = property[1]
-                    # For builds, this proeprty is sometimes a relative path,
+                    # For builds, this property is sometimes a relative path,
                     # ('releases/mozilla-beta') and not just a name.  For
                     # consistency, we'll strip the path components.
                     if isinstance(builddata['tree'], basestring):
                         builddata['tree'] = os.path.basename(builddata['tree'])
 
                 # look for buildid
-                if property[0] == 'buildid':
+                elif property[0] == 'buildid':
                     builddata['buildid'] = property[1]
                     date, builddata['builddate'] = self.buildid2date(property[1])
+
+                # look for the previous buildid
+                elif property[0] == 'previous_buildid':
+                    builddata['previous_buildid'] = property[1]
 
                 # look for platform
                 elif property[0] == 'platform':
@@ -156,6 +168,10 @@ class PulseBuildbotTranslator(object):
                     if '-debug' in builddata['platform']:
                         # strip '-debug' from the platform string if it's present
                         builddata['platform'] = builddata['platform'][0:builddata['platform'].find('-debug')]
+
+                # look for the locale
+                elif property[0] == 'locale':
+                    builddata['locale'] = property[1]
 
                 # look for build url
                 elif property[0] in ['packageUrl', 'build_url', 'fileURL']:
@@ -177,6 +193,10 @@ class PulseBuildbotTranslator(object):
                 elif property[0] == 'buildername':
                     builddata['buildername'] = property[1]
 
+                # look for slave builder
+                elif property[0] == 'slavename':
+                    builddata['slave'] = property[1]
+
                 # look for stage_platform
                 elif property[0] == 'stage_platform':
                     # For some messages, the platform we really care about
@@ -190,11 +210,16 @@ class PulseBuildbotTranslator(object):
             if not builddata['tree']:
                 raise BadPulseMessageError(key, "no 'branch' property")
 
-            builddata['buildtype'] = 'opt'
+            # If no locale is given fallback to en-US
+            if not builddata['locale']:
+                builddata['locale'] = 'en-US'
+
             if 'debug' in key:
                 builddata['buildtype'] = 'debug'
             elif 'pgo' in key:
                 builddata['buildtype'] = 'pgo'
+            else:
+                builddata['buildtype'] = 'opt'
 
             # see if this message is for a unittest
             unittestRe = re.compile(r'build\.((%s)[-|_](.*?)(-debug|-o-debug|-pgo|_pgo|_test)?[-|_](test|unittest|pgo)-(.*?))\.(\d+)\.(log_uploaded|finished)' %
