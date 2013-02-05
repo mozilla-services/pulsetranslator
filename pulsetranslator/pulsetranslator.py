@@ -95,7 +95,7 @@ class PulseBuildbotTranslator(object):
                 key_parts.append(tag)
         key_parts.append(original_key)
 
-        publish_message(TranlsatorPublisher, self.errorLogger, data, '.'.join(key_parts))
+        publish_message(TranslatorPublisher, self.errorLogger, data, '.'.join(key_parts))
 
     def on_pulse_message(self, data, message):
         key = 'unknown'
