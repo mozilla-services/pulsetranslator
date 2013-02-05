@@ -123,7 +123,7 @@ class LogHandler(object):
                      product,
                      original_key]
 
-        publish_message(TranslatorPublisher, data, '.'.join(key_parts))
+        publish_message(TranlsatorPublisher, self.errorLogger, data, '.'.join(key_parts))
 
     def start(self):
         self.errorLogger = self.get_logger('LogHandlerErrorLog', 'log_handler_error.log')
