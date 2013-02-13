@@ -134,8 +134,6 @@ class LogHandler(object):
         publish_message(TranslatorPublisher, self.errorLogger, data, '.'.join(key_parts))
 
     def publish_build_message(self, data):
-        # camd: move this to loghandler, like publish_unittest_message?
-
         # The original routing key has the format build.foo.bar.finished;
         # we only use 'foo' in the new routing key.
         original_key = data['key'].split('.')[1]
