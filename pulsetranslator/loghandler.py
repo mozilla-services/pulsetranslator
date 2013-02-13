@@ -150,7 +150,6 @@ class LogHandler(object):
 
         publish_message(TranslatorPublisher, self.errorLogger, data, '.'.join(key_parts))
 
-
     def start(self):
         self.errorLogger = self.get_logger('LogHandlerErrorLog', 'log_handler_error.log')
         while True:

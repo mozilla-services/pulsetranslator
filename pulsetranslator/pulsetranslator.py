@@ -81,7 +81,6 @@ class PulseBuildbotTranslator(object):
         if not data['buildurl']:
             raise NoBuildUrlError(data['key'])
         self.queue.put(data)
-#        self.publish_build_message(data)
 
     def on_pulse_message(self, data, message):
         key = 'unknown'
