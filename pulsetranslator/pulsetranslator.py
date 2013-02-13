@@ -54,7 +54,7 @@ class PulseBuildbotTranslator(object):
         self.pulse.listen()
 
     def buildid2date(self, string):
-        """Takes a buildid string and returns a python datetime and 
+        """Takes a buildid string and returns a python datetime and
            seconds since epoch.
         """
 
@@ -80,22 +80,8 @@ class PulseBuildbotTranslator(object):
                 raise BadTagError(data['key'], tag, data['platform'], data['product'])
         if not data['buildurl']:
             raise NoBuildUrlError(data['key'])
-        self.publish_build_message(data)
-
-    def publish_build_message(self, data):
-        # The original routing key has the format build.foo.bar.finished;
-        # we only use 'foo' in the new routing key.
-        original_key = data['key'].split('.')[1]
-        tree = data['tree']
-        platform = data['platform']
-        buildtype = data['buildtype']
-        key_parts = ['build', tree, platform, buildtype]
-        for tag in data['tags']:
-            if tag:
-                key_parts.append(tag)
-        key_parts.append(original_key)
-
-        publish_message(TranslatorPublisher, self.errorLogger, data, '.'.join(key_parts))
+        self.queue.put(data)
+#        self.publish_build_message(data)
 
     def on_pulse_message(self, data, message):
         key = 'unknown'
@@ -254,7 +240,7 @@ class PulseBuildbotTranslator(object):
 
                 builddata['buildnumber'] = match.groups()[6]
                 builddata['talos'] = 'talos' in builddata['buildername']
- 
+
                 if stage_platform:
                     builddata['platform'] = stage_platform
 

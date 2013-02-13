@@ -68,6 +68,49 @@ class LogHandler(object):
             raise
 
     def process_builddata(self, data):
+
+        # camd: Is this where I should decide when to call publish_build_message()?
+        # this is where it's done for unittest, called in the start() loop
+        # Do I add support for both here?  or create a parallel method to this?
+
+        if not data.get('logurl'):
+            # should log this
+            return
+
+        # If it's been less than 15s since we checked for this particular
+        # log, put this item back in the queue without checking again.
+        now = calendar.timegm(time.gmtime())
+        last_check = data.get('last_check', 0)
+        if last_check and now - last_check < 15:
+            self.queue.put(data)
+            return
+
+        code, content_length = self.get_url_info(str(data['logurl']))
+        if DEBUG:
+            if data.get('last_check'):
+                print '...reprocessing logfile', code, data.get('logurl')
+                print '...', data.get('key')
+                print '...', now - data.get('insertion_time', 0), 'seconds since insertion_time'
+            else:
+                print 'processing logfile', code, data.get('logurl')
+        if code == 200:
+            self.publish_build_message(data)
+        else:
+            if now - data.get('insertion_time', 0) > 600:
+                # Currently, this is raised for unittests from beta and aurora
+                # builds at least, as their log files get stored in a place
+                # entirely different than the builds.  This should change soon
+                # per bug 713846, so I've not adapted the code to handle this.
+                raise LogTimeoutError(data.get('key', 'unknown'), data.get('logurl'))
+            else:
+                # re-insert this into the queue
+                data['last_check'] = now
+                if DEBUG:
+                    print 'requeueing after check'
+                self.queue.put(data)
+
+    def process_unittestdata(self, data):
+
         if not data.get('logurl'):
             # should log this
             return
@@ -125,6 +168,24 @@ class LogHandler(object):
 
         publish_message(TranslatorPublisher, self.errorLogger, data, '.'.join(key_parts))
 
+    def publish_build_message(self, data):
+        # camd: move this to loghandler, like publish_unittest_message?
+
+        # The original routing key has the format build.foo.bar.finished;
+        # we only use 'foo' in the new routing key.
+        original_key = data['key'].split('.')[1]
+        tree = data['tree']
+        platform = data['platform']
+        buildtype = data['buildtype']
+        key_parts = ['build', tree, platform, buildtype]
+        for tag in data['tags']:
+            if tag:
+                key_parts.append(tag)
+        key_parts.append(original_key)
+
+        publish_message(TranslatorPublisher, self.errorLogger, data, '.'.join(key_parts))
+
+
     def start(self):
         self.errorLogger = self.get_logger('LogHandlerErrorLog', 'log_handler_error.log')
         while True:
@@ -147,6 +208,7 @@ class LogHandler(object):
                     os.kill(self.parent_pid, 0)
                 data = self.queue.get_nowait()
                 self.process_builddata(data)
+                self.process_unittestdata(data)
             except Empty:
                 time.sleep(5)
                 continue

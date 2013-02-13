@@ -43,11 +43,11 @@ class TranslatorPublisher(GenericPublisher):
     def __init__(self, **kwargs):
         GenericPublisher.__init__(self,
                                   PulseConfiguration(**kwargs),
-                                  'org.mozilla.exchange.build.normalized')
+                                  'foo.org.mozilla.exchange.build.normalized')
 
 class TranslatorConsumer(GenericConsumer):
     def __init__(self, **kwargs):
         GenericConsumer.__init__(self,
                                  PulseConfiguration(**kwargs),
-                                 'org.mozilla.exchange.build.normalized',
+                                 'foo.org.mozilla.exchange.build.normalized',
                                  **kwargs)
