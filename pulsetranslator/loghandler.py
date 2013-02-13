@@ -67,7 +67,15 @@ class LogHandler(object):
             # return (-1, -1)
             raise
 
-    def process_builddata(self, data):
+    def process_data(self, data, publish_method):
+        """
+        Publish the message when the data is ready.
+
+        ``publish_method`` The method to publish the type of message that
+            this data is for.  Usually ``publish_unittest_message`` or
+            ``publish_build_message``.
+        """
+
         if not data.get('logurl'):
             # should log this
             return
@@ -89,7 +97,7 @@ class LogHandler(object):
             else:
                 print 'processing logfile', code, data.get('logurl')
         if code == 200:
-            self.publish_unittest_message(data)
+            publish_method(data)
         else:
             if now - data.get('insertion_time', 0) > 600:
                 # Currently, this is raised for unittests from beta and aurora
@@ -125,6 +133,21 @@ class LogHandler(object):
 
         publish_message(TranslatorPublisher, self.errorLogger, data, '.'.join(key_parts))
 
+    def publish_build_message(self, data):
+        # The original routing key has the format build.foo.bar.finished;
+        # we only use 'foo' in the new routing key.
+        original_key = data['key'].split('.')[1]
+        tree = data['tree']
+        platform = data['platform']
+        buildtype = data['buildtype']
+        key_parts = ['build', tree, platform, buildtype]
+        for tag in data['tags']:
+            if tag:
+                key_parts.append(tag)
+        key_parts.append(original_key)
+
+        publish_message(TranslatorPublisher, self.errorLogger, data, '.'.join(key_parts))
+
     def start(self):
         self.errorLogger = self.get_logger('LogHandlerErrorLog', 'log_handler_error.log')
         while True:
@@ -146,7 +169,20 @@ class LogHandler(object):
                 else:
                     os.kill(self.parent_pid, 0)
                 data = self.queue.get_nowait()
-                self.process_builddata(data)
+
+                # publish the right kind of message based on the data.
+                # if it's not a unittest, presume it's a build.
+                if data.get("test"):
+                    self.process_data(
+                        data,
+                        publish_method=self.publish_unittest_message
+                    )
+                else:
+                    self.process_data(
+                        data,
+                        publish_method=self.publish_build_message
+                    )
+
             except Empty:
                 time.sleep(5)
                 continue
