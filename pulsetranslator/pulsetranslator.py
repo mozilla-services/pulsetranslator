@@ -281,8 +281,9 @@ class PulseBuildbotTranslator(object):
                                      (builddata['tree'], builddata['platform']))
                 match = otherRe.match(key)
                 if match:
-                    if 'log_uploaded' in match.group(9):
-                        # we only care about 'finished' message for builds
+                    if 'finished' in match.group(9):
+                        # Ignore this message, we only care about 'log_uploaded'
+                        # messages for builds
                         return
 
                     builddata['tags'] = match.group(7).replace('_', '-').split('-')

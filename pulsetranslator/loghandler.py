@@ -67,49 +67,14 @@ class LogHandler(object):
             # return (-1, -1)
             raise
 
-    def process_builddata(self, data):
+    def process_data(self, data, publish_method):
+        """
+        Publish the message when the data is ready.
 
-        # camd: Is this where I should decide when to call publish_build_message()?
-        # this is where it's done for unittest, called in the start() loop
-        # Do I add support for both here?  or create a parallel method to this?
-
-        if not data.get('logurl'):
-            # should log this
-            return
-
-        # If it's been less than 15s since we checked for this particular
-        # log, put this item back in the queue without checking again.
-        now = calendar.timegm(time.gmtime())
-        last_check = data.get('last_check', 0)
-        if last_check and now - last_check < 15:
-            self.queue.put(data)
-            return
-
-        code, content_length = self.get_url_info(str(data['logurl']))
-        if DEBUG:
-            if data.get('last_check'):
-                print '...reprocessing logfile', code, data.get('logurl')
-                print '...', data.get('key')
-                print '...', now - data.get('insertion_time', 0), 'seconds since insertion_time'
-            else:
-                print 'processing logfile', code, data.get('logurl')
-        if code == 200:
-            self.publish_build_message(data)
-        else:
-            if now - data.get('insertion_time', 0) > 600:
-                # Currently, this is raised for unittests from beta and aurora
-                # builds at least, as their log files get stored in a place
-                # entirely different than the builds.  This should change soon
-                # per bug 713846, so I've not adapted the code to handle this.
-                raise LogTimeoutError(data.get('key', 'unknown'), data.get('logurl'))
-            else:
-                # re-insert this into the queue
-                data['last_check'] = now
-                if DEBUG:
-                    print 'requeueing after check'
-                self.queue.put(data)
-
-    def process_unittestdata(self, data):
+        ``publish_method`` The method to publish the type of message that
+            this data is for.  Usually ``publish_unittest_message`` or
+            ``publish_build_message``.
+        """
 
         if not data.get('logurl'):
             # should log this
@@ -132,7 +97,7 @@ class LogHandler(object):
             else:
                 print 'processing logfile', code, data.get('logurl')
         if code == 200:
-            self.publish_unittest_message(data)
+            publish_method(data)
         else:
             if now - data.get('insertion_time', 0) > 600:
                 # Currently, this is raised for unittests from beta and aurora
@@ -207,8 +172,20 @@ class LogHandler(object):
                 else:
                     os.kill(self.parent_pid, 0)
                 data = self.queue.get_nowait()
-                self.process_builddata(data)
-                self.process_unittestdata(data)
+
+                # publish the right kind of message based on the data.
+                # if it's not a unittest, presume it's a build.
+                if data.get("test"):
+                    self.process_data(
+                        data,
+                        publish_method=self.publish_unittest_message
+                    )
+                else:
+                    self.process_data(
+                        data,
+                        publish_method=self.publish_build_message
+                    )
+
             except Empty:
                 time.sleep(5)
                 continue
