@@ -111,7 +111,7 @@ class PulseBuildbotTranslator(object):
                           'product': None,
                           'version': None,
                           'tree': None,
-                          'timestamp': datetime.datetime.now().strftime('%Y%m%d%H%M%S'),
+                          'timestamp': datetime.datetime.utcnow().strftime('%Y%m%d%H%M%S'),
                         }
 
             # scan the payload for properties applicable to both tests and builds
