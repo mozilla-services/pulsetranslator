@@ -252,7 +252,7 @@ class PulseBuildbotTranslator(object):
                 # what is this?
                 # ex: build.release-mozilla-beta-linux_repack_1.45.finished
                 pass
-            elif [x for x in ['schedulers', 'tag', 'submitter', 'final_verification'] if x in key]:
+            elif [x for x in ['schedulers', 'tag', 'submitter', 'final_verification', 'fuzzer'] if x in key]:
                 # internal buildbot stuff we don't care about
                 # ex: build.release-mozilla-beta-firefox_reset_schedulers.12.finished
                 # ex: build.release-mozilla-beta-fennec_tag.40.finished
