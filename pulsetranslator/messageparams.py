@@ -50,9 +50,9 @@ platforms = {
     'macosx': ['macosx', 'leopard'],
     'android-noion': ['android-noion'],
     'android-xul': ['tegra_android-xul'],
-    'android-armv6': ['android-armv6'],
+    'android-armv6': ['tegra_android-armv6'],
     'android': ['tegra_android', 'panda_android'],
-    'ics_armv7a_gecko': ['ics_armv7a_gecko'],
+    'ics_armv7a_gecko': ['ics_armv7a_gecko', 'ubuntu64-b2g'],
 }
 
 tags = [
