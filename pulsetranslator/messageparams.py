@@ -24,6 +24,8 @@ def convert_os(data):
         return 'snowleopard'
     if re.search(r'OS\s*X\s*10.7', data['buildername'], re.I):
         return 'lion'
+    if re.search(r'OS\s*X\s*10.8', data['buildername'], re.I):
+        return 'mountainlion'
     if re.search(r'WINNT\s*5.2', data['buildername'], re.I):
         return 'xp'
     return 'unknown'
@@ -38,16 +40,17 @@ os_conversions = {
 
 platforms = {
     'linux64-rpm': ['fedora64'],
-    'linux64': ['fedora64'],
+    'linux64': ['fedora64', 'ubuntu64'],
     'linuxqt': ['fedora'],
     'linux-rpm': ['fedora'],
-    'linux': ['fedora', 'linux'],
-    'win32': ['xp', 'win7'],
+    'linux': ['fedora', 'linux', 'ubuntu32'],
+    'win32': ['xp', 'win7', 'win8'],
     'win64': ['w764'],
-    'macosx64': ['macosx64', 'snowleopard', 'leopard', 'lion'],
+    'macosx64': ['macosx64', 'snowleopard', 'leopard', 'lion', 'mountainlion'],
     'macosx': ['macosx', 'leopard'],
     'android-xul': ['tegra_android-xul'],
-    'android': ['tegra_android'],
+    'android': ['tegra_android', 'panda_android'],
+    'b2g': ['ics_armv7a_gecko'],
 }
 
 tags = [
