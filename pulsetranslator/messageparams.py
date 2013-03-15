@@ -48,9 +48,11 @@ platforms = {
     'win64': ['w764'],
     'macosx64': ['macosx64', 'snowleopard', 'leopard', 'lion', 'mountainlion'],
     'macosx': ['macosx', 'leopard'],
+    'android-noion': ['android-noion'],
     'android-xul': ['tegra_android-xul'],
+    'android-armv6': ['android-armv6'],
     'android': ['tegra_android', 'panda_android'],
-    'b2g': ['ics_armv7a_gecko'],
+    'ics_armv7a_gecko': ['ics_armv7a_gecko'],
 }
 
 tags = [
