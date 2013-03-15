@@ -48,11 +48,12 @@ platforms = {
     'win64': ['w764'],
     'macosx64': ['macosx64', 'snowleopard', 'leopard', 'lion', 'mountainlion'],
     'macosx': ['macosx', 'leopard'],
-    'android-noion': ['android-noion'],
+    'android-noion': ['tegra_android-noion'],
     'android-xul': ['tegra_android-xul'],
     'android-armv6': ['tegra_android-armv6'],
+    'android-x86': ['android-x86'],
     'android': ['tegra_android', 'panda_android'],
-    'ics_armv7a_gecko': ['ics_armv7a_gecko', 'ubuntu64-b2g'],
+    'ics_armv7a_gecko': ['fedora-b2g', 'ubuntu64-b2g'],
 }
 
 tags = [
