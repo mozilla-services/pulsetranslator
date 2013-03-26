@@ -8,7 +8,7 @@ from setuptools import setup, find_packages
 PACKAGE_NAME = 'pulsetranslator'
 version = '0.1'
 
-deps = ['mozillapulse']
+deps = ['mozillapulse', 'python-dateutil==1.5']
 
 python_version = sys.version_info[:2]
 if python_version < (2,6) or python_version >= (3,0):

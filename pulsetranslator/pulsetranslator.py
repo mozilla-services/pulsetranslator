@@ -98,6 +98,7 @@ class PulseBuildbotTranslator(object):
             builddata = { 'key': key,
                           'buildid': None,
                           'previous_buildid': None,
+                          'status': None,
                           'platform': None,
                           'builddate': None,
                           'buildurl': None,
@@ -198,6 +199,10 @@ class PulseBuildbotTranslator(object):
             # If no locale is given fallback to en-US
             if not builddata['locale']:
                 builddata['locale'] = 'en-US'
+
+            # status of the build or test notification
+            # see http://hg.mozilla.org/build/buildbot/file/08b7c51d2962/master/buildbot/status/builder.py#l25
+            builddata['status'] = data['payload']['build']['results']
 
             if 'debug' in key:
                 builddata['buildtype'] = 'debug'
