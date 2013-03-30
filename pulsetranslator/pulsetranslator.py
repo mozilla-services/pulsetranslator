@@ -18,12 +18,11 @@ import time
 from translatorexceptions import *
 from loghandler import LogHandler
 import messageparams
-from translatorqueues import *
 
 
 class PulseBuildbotTranslator(object):
 
-    def __init__(self, logdir='logs'):
+    def __init__(self, logdir='logs', message=None):
         self.label = 'pulse-build-translator-%s' % socket.gethostname()
         self.pulse = consumers.BuildConsumer(applabel=self.label)
         self.pulse.configure(topic=['#.finished', '#.log_uploaded'],
@@ -31,6 +30,7 @@ class PulseBuildbotTranslator(object):
                              durable=True)
         self.queue = Queue()
         self.logdir = logdir
+        self.message = message
 
         if not os.access(self.logdir, os.F_OK):
             os.mkdir(self.logdir)
@@ -48,10 +48,16 @@ class PulseBuildbotTranslator(object):
         return logger
 
     def start(self):
-        loghandler = LogHandler(self.queue, os.getpid(), self.logdir)
-        self.logprocess = Process(target=loghandler.start)
-        self.logprocess.start()
-        self.pulse.listen()
+        if self.message:
+            json_data = open(self.message)
+            data = json.load(json_data)
+            self.on_pulse_message(data)
+        else:
+            loghandler = LogHandler(self.queue, os.getpid(), self.logdir)
+            self.logprocess = Process(target=loghandler.start)
+            self.logprocess.start()
+
+            self.pulse.listen()
 
     def buildid2date(self, string):
         """Takes a buildid string and returns a python datetime and
@@ -80,9 +86,10 @@ class PulseBuildbotTranslator(object):
                 raise BadTagError(data['key'], tag, data['platform'], data['product'])
         if not data['buildurl']:
             raise NoBuildUrlError(data['key'])
+
         self.queue.put(data)
 
-    def on_pulse_message(self, data, message):
+    def on_pulse_message(self, data, message=None):
         key = 'unknown'
         stage_platform = None
 
@@ -91,7 +98,8 @@ class PulseBuildbotTranslator(object):
 
             # Acknowledge the message so it doesn't hang around on the
             # pulse server.
-            message.ack()
+            if message:
+                message.ack()
 
             # Create a dict that holds build properties that apply to both
             # unittests and builds.
@@ -281,6 +289,7 @@ class PulseBuildbotTranslator(object):
                         builddata['platform'] = messageparams.guess_platform(key)
                         if not builddata['platform']:
                             raise BadPulseMessageError(key, 'no "platform" property')
+
                 otherRe = re.compile(r'build\.((release-|jetpack-)?(%s)[-|_](xulrunner[-|_])?(%s)([-|_]?)(.*?))\.(\d+)\.(log_uploaded|finished)' %
                                      (builddata['tree'], builddata['platform']))
                 match = otherRe.match(key)

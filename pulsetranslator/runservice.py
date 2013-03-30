@@ -20,6 +20,9 @@ def main():
                       help='directory to store other log files')
     parser.add_option('--daemon', dest='daemon', action='store_true',
                       help='run as daemon (posix only)')
+    parser.add_option('--push-message',
+                      dest='message',
+                      help='path to file of a Pulse message to process')
     options, args = parser.parse_args()
 
     if options.daemon:
@@ -31,7 +34,7 @@ def main():
         f.write("%d\n" % os.getpid())
         f.close()
 
-    service = PulseBuildbotTranslator(logdir=options.logdir)
+    service = PulseBuildbotTranslator(logdir=options.logdir, message=options.message)
     service.start()
 
 if __name__ == "__main__":
