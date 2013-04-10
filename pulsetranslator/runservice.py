@@ -28,11 +28,11 @@ def main():
     parser.add_option('--push-message',
                       dest='message',
                       help='path to file of a Pulse message to process')
-    parser.add_option('--show-properties',
-                      dest='show_properties',
+    parser.add_option('--display-only',
+                      dest='display_only',
                       action='store_true',
                       default=False,
-                      help='show the properties of a build or test in the console')
+                      help='only display build properties and don\'t add jobs to the queue')
     options, args = parser.parse_args()
 
     if options.daemon:
@@ -47,7 +47,7 @@ def main():
     service = PulseBuildbotTranslator(durable=options.durable,
                                       logdir=options.logdir,
                                       message=options.message,
-                                      show_properties=options.show_properties)
+                                      display_only=options.display_only)
     service.start()
 
 if __name__ == "__main__":
