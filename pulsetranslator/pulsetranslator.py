@@ -113,7 +113,9 @@ class PulseBuildbotTranslator(object):
             # Create a dict that holds build properties that apply to both
             # unittests and builds.
             builddata = { 'key': key,
+                          'job_number': None,
                           'buildid': None,
+                          'build_number': None,
                           'previous_buildid': None,
                           'status': None,
                           'platform': None,
@@ -134,6 +136,10 @@ class PulseBuildbotTranslator(object):
 
             # scan the payload for properties applicable to both tests and builds
             for property in data['payload']['build']['properties']:
+
+                # look for the job number
+                if property[0] == 'buildnumber':
+                    builddata['job_number'] = property[1]
 
                 # look for revision
                 if property[0] == 'revision':
@@ -160,6 +166,10 @@ class PulseBuildbotTranslator(object):
                 elif property[0] == 'buildid':
                     builddata['buildid'] = property[1]
                     date, builddata['builddate'] = self.buildid2date(property[1])
+
+                # look for the build number which comes with candidate builds
+                elif property[0] == 'build_number':
+                    builddata['build_number'] = property[1]
 
                 # look for the previous buildid
                 elif property[0] == 'previous_buildid':
@@ -259,7 +269,6 @@ class PulseBuildbotTranslator(object):
                 elif builddata['test'].endswith('_2-pgo'):
                     short_builder = "%s.2-pgo" % short_builder[0:-6]
 
-                builddata['buildnumber'] = match.groups()[6]
                 builddata['talos'] = 'talos' in builddata['buildername']
 
                 if stage_platform:
