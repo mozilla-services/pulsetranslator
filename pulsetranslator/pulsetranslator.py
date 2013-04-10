@@ -22,7 +22,7 @@ import messageparams
 
 class PulseBuildbotTranslator(object):
 
-    def __init__(self, logdir='logs', message=None):
+    def __init__(self, logdir='logs', message=None, show_properties=False):
         self.label = 'pulse-build-translator-%s' % socket.gethostname()
         self.pulse = consumers.BuildConsumer(applabel=self.label)
         self.pulse.configure(topic=['#.finished', '#.log_uploaded'],
@@ -31,6 +31,7 @@ class PulseBuildbotTranslator(object):
         self.queue = Queue()
         self.logdir = logdir
         self.message = message
+        self.show_properties = show_properties
 
         if not os.access(self.logdir, os.F_OK):
             os.mkdir(self.logdir)
@@ -75,8 +76,12 @@ class PulseBuildbotTranslator(object):
             raise BadPlatformError(data['key'], data['platform'])
         elif data['os'] not in messageparams.platforms[data['platform']]:
             raise BadOSError(data['key'], data['platform'], data['os'], data['buildername'])
-        else:
-            self.queue.put(data)
+
+        if self.show_properties:
+            print "Test properties:\n%s\n" % data
+            return
+
+        self.queue.put(data)
 
     def process_build(self, data):
         if data['platform'] not in messageparams.platforms:
@@ -86,6 +91,10 @@ class PulseBuildbotTranslator(object):
                 raise BadTagError(data['key'], tag, data['platform'], data['product'])
         if not data['buildurl']:
             raise NoBuildUrlError(data['key'])
+
+        if self.show_properties:
+            print "Build properties:\n%s\n" % data
+            return
 
         self.queue.put(data)
 

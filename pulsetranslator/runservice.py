@@ -23,6 +23,11 @@ def main():
     parser.add_option('--push-message',
                       dest='message',
                       help='path to file of a Pulse message to process')
+    parser.add_option('--show-properties',
+                      dest='show_properties',
+                      action='store_true',
+                      default=False,
+                      help='show the properties of a build or test in the console')
     options, args = parser.parse_args()
 
     if options.daemon:
@@ -34,7 +39,8 @@ def main():
         f.write("%d\n" % os.getpid())
         f.close()
 
-    service = PulseBuildbotTranslator(logdir=options.logdir, message=options.message)
+    service = PulseBuildbotTranslator(logdir=options.logdir, message=options.message,
+                                      show_properties=options.show_properties)
     service.start()
 
 if __name__ == "__main__":
