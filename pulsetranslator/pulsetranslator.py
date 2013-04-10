@@ -22,16 +22,18 @@ import messageparams
 
 class PulseBuildbotTranslator(object):
 
-    def __init__(self, logdir='logs', message=None, show_properties=False):
+    def __init__(self, durable=False, logdir='logs', message=None, show_properties=False):
+        self.durable = durable
         self.label = 'pulse-build-translator-%s' % socket.gethostname()
-        self.pulse = consumers.BuildConsumer(applabel=self.label)
-        self.pulse.configure(topic=['#.finished', '#.log_uploaded'],
-                             callback=self.on_pulse_message,
-                             durable=True)
-        self.queue = Queue()
         self.logdir = logdir
         self.message = message
         self.show_properties = show_properties
+
+        self.queue = Queue()
+        self.pulse = consumers.BuildConsumer(applabel=self.label)
+        self.pulse.configure(topic=['#.finished', '#.log_uploaded'],
+                             callback=self.on_pulse_message,
+                             durable=self.durable)
 
         if not os.access(self.logdir, os.F_OK):
             os.mkdir(self.logdir)

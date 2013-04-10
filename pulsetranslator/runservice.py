@@ -20,6 +20,11 @@ def main():
                       help='directory to store other log files')
     parser.add_option('--daemon', dest='daemon', action='store_true',
                       help='run as daemon (posix only)')
+    parser.add_option('--durable',
+                      dest='durable',
+                      action='store_true',
+                      default=False,
+                      help='register a durable queue')
     parser.add_option('--push-message',
                       dest='message',
                       help='path to file of a Pulse message to process')
@@ -39,7 +44,9 @@ def main():
         f.write("%d\n" % os.getpid())
         f.close()
 
-    service = PulseBuildbotTranslator(logdir=options.logdir, message=options.message,
+    service = PulseBuildbotTranslator(durable=options.durable,
+                                      logdir=options.logdir,
+                                      message=options.message,
                                       show_properties=options.show_properties)
     service.start()
 
