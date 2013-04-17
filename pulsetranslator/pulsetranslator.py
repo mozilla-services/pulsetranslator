@@ -152,7 +152,7 @@ class PulseBuildbotTranslator(object):
                     builddata['product'] = property[1]
 
                 # look for version
-                elif property[0] == 'appVersion':
+                elif property[0] == 'version':
                     builddata['version'] = property[1]
 
                 # look for tree
