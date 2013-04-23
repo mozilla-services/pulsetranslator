@@ -30,10 +30,6 @@ class PulseBuildbotTranslator(object):
         self.display_only = display_only
 
         self.queue = Queue()
-        self.pulse = consumers.BuildConsumer(applabel=self.label)
-        self.pulse.configure(topic=['#.finished', '#.log_uploaded'],
-                             callback=self.on_pulse_message,
-                             durable=self.durable)
 
         if not os.access(self.logdir, os.F_OK):
             os.mkdir(self.logdir)
@@ -52,15 +48,36 @@ class PulseBuildbotTranslator(object):
 
     def start(self):
         if self.message:
+            # handle a test message
             json_data = open(self.message)
             data = json.load(json_data)
             self.on_pulse_message(data)
-        else:
-            loghandler = LogHandler(self.queue, os.getpid(), self.logdir)
-            self.logprocess = Process(target=loghandler.start)
-            self.logprocess.start()
+            return
 
-            self.pulse.listen()
+        loghandler = LogHandler(self.queue, os.getpid(), self.logdir)
+        self.logprocess = Process(target=loghandler.start)
+        self.logprocess.start()
+
+        # Start listening for pulse messages. If 5 failures in a
+        # minute, wait 5 minutes before retrying.
+        failures = []
+        while True:
+            pulse = consumers.BuildConsumer(applabel=self.label)
+            pulse.configure(topic=['#.finished', '#.log_uploaded'],
+                            callback=self.on_pulse_message,
+                            durable=self.durable)
+            try:
+                pulse.listen()
+            except Exception:
+                self.errorLogger.exception("Error occurred during pulse.listen()")
+                traceback.print_exc()
+            now = datetime.datetime.now()
+            failures = [x for x in failures
+                        if now - x < datetime.timedelta(seconds=60)]
+            failures.append(now)
+            if len(failures) >= 5:
+                failures = []
+                time.sleep(5 * 60)
 
     def buildid2date(self, string):
         """Takes a buildid string and returns a python datetime and
