@@ -3,6 +3,7 @@
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import calendar
+import copy
 import datetime
 from dateutil.parser import parse
 import json
@@ -108,7 +109,9 @@ class PulseBuildbotTranslator(object):
         for tag in data['tags']:
             if tag not in messageparams.tags:
                 raise BadTagError(data['key'], tag, data['platform'], data['product'])
-        if not data['buildurl']:
+        # Repacks do not have a buildurl included. We can remove this workaround once
+        # bug 857971 has been fixed
+        if not data['buildurl'] and not data['repack']:
             raise NoBuildUrlError(data['key'])
 
         if self.display_only:
@@ -141,11 +144,13 @@ class PulseBuildbotTranslator(object):
                           'builddate': None,
                           'buildurl': None,
                           'locale': None,
+                          'locales': None,
                           'logurl': None,
                           'testsurl': None,
                           'release': None,
                           'buildername': None,
                           'slave': None,
+                          'repack': None,
                           'revision': None,
                           'product': None,
                           'version': None,
@@ -204,6 +209,10 @@ class PulseBuildbotTranslator(object):
                 # look for the locale
                 elif property[0] == 'locale':
                     builddata['locale'] = property[1]
+
+                # look for the locale
+                elif property[0] == 'locales':
+                    builddata['locales'] = property[1]
 
                 # look for build url
                 elif property[0] in ['packageUrl', 'build_url', 'fileURL']:
@@ -298,10 +307,6 @@ class PulseBuildbotTranslator(object):
                 # what is this?
                 # ex: build.release-mozilla-esr10-firefox_source.0.finished
                 pass
-            elif 'repack' in key:
-                # what is this?
-                # ex: build.release-mozilla-beta-linux_repack_1.45.finished
-                pass
             elif [x for x in ['schedulers', 'tag', 'submitter', 'final_verification', 'fuzzer'] if x in key]:
                 # internal buildbot stuff we don't care about
                 # ex: build.release-mozilla-beta-firefox_reset_schedulers.12.finished
@@ -341,7 +346,7 @@ class PulseBuildbotTranslator(object):
                     # There are some tags we don't care about as tags,
                     # usually because they are redundant with other properties,
                     # so remove them.
-                    notags = ['debug', 'pgo', 'opt']
+                    notags = ['debug', 'pgo', 'opt', 'repack']
                     builddata['tags'] = [x for x in builddata['tags'] if x not in notags]
 
                     # Sometimes a tag will just be a digit, i.e.,
@@ -358,7 +363,22 @@ class PulseBuildbotTranslator(object):
                     if match.group(4) or 'xulrunner' in builddata['tags']:
                         builddata['product'] = 'xulrunner'
 
-                    self.process_build(builddata)
+                    # In case of repacks we have to send multiple notifications,
+                    # each for every locale included. We can remove this workaround
+                    # once bug 857971 has been fixed.
+                    if 'repack' in key:
+                        builddata['repack'] = True
+
+                        for locale in builddata["locales"].split(','):
+                            if not locale:
+                                raise BadLocalesError(key, builddata["locales"])
+
+                            data = copy.deepcopy(builddata)
+                            data['locale'] = locale
+                            self.process_build(data)
+
+                    else:
+                        self.process_build(builddata)
                 else:
                     raise BadPulseMessageError(key, "unknown message type")
 

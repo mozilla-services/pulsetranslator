@@ -60,6 +60,15 @@ class BadOSError(BadPlatformError):
         return ("%s, platform: %s, os: %s, builder: %s" %
             (self.key, self.platform, self.os, self.buildername))
 
+class BadLocalesError(BadPulseMessageError):
+
+    def __init__(self, key, locales):
+        self.key = key
+        self.locales = locales
+
+    def __str__(self):
+        return "%s, locales: %s" % (self.key, self.locales)
+
 class LogTimeoutError(Exception):
 
     def __init__(self, key, logurl):
