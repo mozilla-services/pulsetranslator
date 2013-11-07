@@ -39,14 +39,18 @@ os_conversions = {
 }
 
 platforms = {
+    'linux32_gecko': ['linux32_gecko'],
+    'linux64_gecko': ['linux64_gecko'],
     'linux64-rpm': ['fedora64'],
     'linux64': ['fedora64', 'ubuntu64'],
     'linuxqt': ['fedora'],
     'linux-rpm': ['fedora'],
     'linux': ['fedora', 'linux', 'ubuntu32'],
     'win32': ['xp', 'win7', 'win8'],
+    'win32_gecko': ['win32_gecko'],
     'win64': ['w764'],
     'macosx64': ['macosx64', 'snowleopard', 'leopard', 'lion', 'mountainlion'],
+    'macosx64_gecko': ['macosx64_gecko'],
     'macosx': ['macosx', 'leopard'],
     'android-noion': ['tegra_android-noion'],
     'android-xul': ['tegra_android-xul'],
