@@ -46,8 +46,11 @@ class LogHandler(object):
             content_length = -1
             p = urlparse(url)
 
-            conn = httplib.HTTPConnection(p[1])
-            conn.request('HEAD', p[2])
+            if p.scheme == 'https':
+                conn = httplib.HTTPSConnection(p.netloc)
+            else:
+                conn = httplib.HTTPConnection(p.netloc)
+            conn.request('HEAD', p.path)
             res = conn.getresponse()
             code = res.status
 
