@@ -15,6 +15,7 @@ import os
 import re
 import socket
 import time
+import traceback
 
 from translatorexceptions import *
 from loghandler import LogHandler
