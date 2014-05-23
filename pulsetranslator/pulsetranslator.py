@@ -172,7 +172,9 @@ class PulseBuildbotTranslator(object):
 
                 # look for product
                 elif property[0] == 'product':
-                    builddata['product'] = property[1]
+                    # Bug 1010120:
+                    # Ensure to lowercase to prevent issues with capitalization
+                    builddata['product'] = property[1].lower()
 
                 # look for version
                 elif property[0] == 'version':
