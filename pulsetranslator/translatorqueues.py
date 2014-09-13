@@ -3,16 +3,16 @@
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import datetime
-from mozillapulse.config import PulseConfiguration
-from mozillapulse.consumers import GenericConsumer
-from mozillapulse.messages.base import GenericMessage
-from mozillapulse.publishers import GenericPublisher
 import time
 import traceback
 
+from mozillapulse.messages.base import GenericMessage
 
-def publish_message(publisherClass, logger, data, routing_key):
-    publisher = publisherClass()
+
+def publish_message(publisherClass, logger, data, routing_key, pulse_cfg):
+    publisher = publisherClass(connect=False)
+    if pulse_cfg:
+        publisher.config = pulse_cfg
     msg = GenericMessage()
     msg.routing_parts = routing_key.split('.')
     assert(isinstance(data, dict))
@@ -37,17 +37,3 @@ def publish_message(publisherClass, logger, data, routing_key):
                 time.sleep(5 * 60)
             else:
                 time.sleep(5)
-
-
-class TranslatorPublisher(GenericPublisher):
-    def __init__(self, **kwargs):
-        GenericPublisher.__init__(self,
-                                  PulseConfiguration(**kwargs),
-                                  'org.mozilla.exchange.build.normalized')
-
-class TranslatorConsumer(GenericConsumer):
-    def __init__(self, **kwargs):
-        GenericConsumer.__init__(self,
-                                 PulseConfiguration(**kwargs),
-                                 'org.mozilla.exchange.build.normalized',
-                                 **kwargs)

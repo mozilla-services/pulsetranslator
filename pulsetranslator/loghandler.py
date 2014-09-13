@@ -9,24 +9,28 @@ import logging
 import logging.handlers
 import os
 import platform
-from Queue import Empty
 import subprocess
 import sys
 import time
+
+from Queue import Empty
 from urlparse import urlparse
 
+from mozillapulse.publishers import NormalizedBuildPublisher
+
 from translatorexceptions import *
-from translatorqueues import *
+from translatorqueues import publish_message
 
 DEBUG = False
 
 
 class LogHandler(object):
 
-    def __init__(self, queue, parent_pid, logdir):
+    def __init__(self, queue, parent_pid, logdir, publisher_cfg):
         self.queue = queue
         self.parent_pid = parent_pid
         self.logdir = logdir
+        self.publisher_cfg = publisher_cfg
 
     def get_logger(self, name, filename):
         filepath = os.path.join(self.logdir, filename)
@@ -65,7 +69,7 @@ class LogHandler(object):
             # this can happen when we didn't get a valid url from pulse
             return (-1, -1)
 
-        except Exception, inst:
+        except Exception:
             # XXX: something bad happened; we should log this
             # return (-1, -1)
             raise
@@ -120,36 +124,38 @@ class LogHandler(object):
         # we only use 'foo' in the new routing key.
         original_key = data['key'].split('.')[1]
         tree = data['tree']
-        platform = data['platform']
+        pltfrm = data['platform']
         buildtype = data['buildtype']
         os = data['os']
         test = data['test']
         product = data['product'] if data['product'] else 'unknown'
         key_parts = ['talos' if data['talos'] else 'unittest',
                      tree,
-                     platform,
+                     pltfrm,
                      os,
                      buildtype,
                      test,
                      product,
                      original_key]
 
-        publish_message(TranslatorPublisher, self.errorLogger, data, '.'.join(key_parts))
+        publish_message(NormalizedBuildPublisher, self.errorLogger, data,
+                        '.'.join(key_parts), self.publisher_cfg)
 
     def publish_build_message(self, data):
         # The original routing key has the format build.foo.bar.finished;
         # we only use 'foo' in the new routing key.
         original_key = data['key'].split('.')[1]
         tree = data['tree']
-        platform = data['platform']
+        pltfrm = data['platform']
         buildtype = data['buildtype']
-        key_parts = ['build', tree, platform, buildtype]
+        key_parts = ['build', tree, pltfrm, buildtype]
         for tag in data['tags']:
             if tag:
                 key_parts.append(tag)
         key_parts.append(original_key)
 
-        publish_message(TranslatorPublisher, self.errorLogger, data, '.'.join(key_parts))
+        publish_message(NormalizedBuildPublisher, self.errorLogger, data,
+                        '.'.join(key_parts), self.publisher_cfg)
 
     def start(self):
         self.errorLogger = self.get_logger('LogHandlerErrorLog', 'log_handler_error.log')
@@ -194,7 +200,7 @@ class LogHandler(object):
                 # XXX: Need to drain the queue to a file before shutting
                 # down, so we can pick up where we left off when we resume.
                 sys.exit(0)
-            except Exception, inst:
+            except Exception:
                 obj_to_log = data
                 if data.get('payload') and data['payload'].get('build') and data['payload']['build'].get('properties'):
                     obj_to_log = data['payload']['build']['properties']

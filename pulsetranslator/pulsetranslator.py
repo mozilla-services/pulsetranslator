@@ -5,17 +5,18 @@
 import calendar
 import copy
 import datetime
-from dateutil.parser import parse
 import json
 import logging
 import logging.handlers
-from mozillapulse import consumers
-from multiprocessing import Process, Queue
 import os
 import re
 import socket
 import time
 import traceback
+
+from dateutil.parser import parse
+from mozillapulse import consumers
+from multiprocessing import Process, Queue
 
 from translatorexceptions import *
 from loghandler import LogHandler
@@ -24,19 +25,22 @@ import messageparams
 
 class PulseBuildbotTranslator(object):
 
-    def __init__(self, durable=False, logdir='logs', message=None, display_only=False):
+    def __init__(self, durable=False, logdir='logs', display_only=False,
+                 consumer_cfg=None, publisher_cfg=None):
         self.durable = durable
         self.label = 'pulse-build-translator-%s' % socket.gethostname()
         self.logdir = logdir
-        self.message = message
         self.display_only = display_only
+        self.consumer_cfg = consumer_cfg
+        self.publisher_cfg = publisher_cfg
 
         self.queue = Queue()
 
         if not os.access(self.logdir, os.F_OK):
             os.mkdir(self.logdir)
 
-        self.badPulseMessageLogger = self.get_logger('BadPulseMessage', 'bad_pulse_message.log')
+        self.badPulseMessageLogger = self.get_logger('BadPulseMessage',
+                                                     'bad_pulse_message.log')
         self.errorLogger = self.get_logger('ErrorLog', 'error.log')
 
     def get_logger(self, name, filename):
@@ -49,14 +53,8 @@ class PulseBuildbotTranslator(object):
         return logger
 
     def start(self):
-        if self.message:
-            # handle a test message
-            json_data = open(self.message)
-            data = json.load(json_data)
-            self.on_pulse_message(data)
-            return
-
-        loghandler = LogHandler(self.queue, os.getpid(), self.logdir)
+        loghandler = LogHandler(self.queue, os.getpid(), self.logdir,
+                                self.publisher_cfg)
         self.logprocess = Process(target=loghandler.start)
         self.logprocess.start()
 
@@ -64,10 +62,12 @@ class PulseBuildbotTranslator(object):
         # minute, wait 5 minutes before retrying.
         failures = []
         while True:
-            pulse = consumers.BuildConsumer(applabel=self.label)
+            pulse = consumers.BuildConsumer(applabel=self.label, connect=False)
             pulse.configure(topic=['#.finished', '#.log_uploaded'],
                             callback=self.on_pulse_message,
                             durable=self.durable)
+            if self.consumer_cfg:
+                pulse.config = self.consumer_cfg
             try:
                 pulse.listen()
             except Exception:
@@ -109,9 +109,10 @@ class PulseBuildbotTranslator(object):
             raise BadPlatformError(data['key'], data['platform'])
         for tag in data['tags']:
             if tag not in messageparams.tags:
-                raise BadTagError(data['key'], tag, data['platform'], data['product'])
-        # Repacks do not have a buildurl included. We can remove this workaround once
-        # bug 857971 has been fixed
+                raise BadTagError(data['key'], tag, data['platform'],
+                                  data['product'])
+        # Repacks do not have a buildurl included. We can remove this
+        # workaround once bug 857971 has been fixed
         if not data['buildurl'] and not data['repack']:
             raise NoBuildUrlError(data['key'])
 
@@ -385,8 +386,8 @@ class PulseBuildbotTranslator(object):
                 else:
                     raise BadPulseMessageError(key, "unknown message type")
 
-        except BadPulseMessageError, inst:
+        except BadPulseMessageError:
             self.badPulseMessageLogger.exception(json.dumps(data.get('payload'), indent=2))
-        except Exception, inst:
+        except Exception:
             self.errorLogger.exception(json.dumps(data, indent=2))
 

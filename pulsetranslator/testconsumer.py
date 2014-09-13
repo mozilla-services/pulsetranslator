@@ -10,9 +10,14 @@ queues. Once done run `python setup.py develop` to setup the package.
 Now the publisher can be started with `./runtranslator`.
 """
 
+import ConfigParser
 import json
+import optparse
+import os.path
+import uuid
 
-from translatorqueues import TranslatorConsumer
+from mozillapulse.config import PulseConfiguration
+from mozillapulse.consumers import NormalizedBuildConsumer
 
 
 def on_pulse_message(data, message):
@@ -24,10 +29,31 @@ def on_pulse_message(data, message):
 
     print json.dumps(data, indent=2)
 
-if __name__ == "__main__":
-    pulse = TranslatorConsumer(applabel='translator_test_consumer')
+
+def main():
+    parser = optparse.OptionParser()
+    parser.add_option('--pulse-cfg', dest='pulse_cfg', default='',
+                      help='Pulse config')
+    parser.add_option('--pulse-cfg-section', dest='pulse_cfg_section',
+                      default='pulse', help='Pulse config section')
+    options, args = parser.parse_args()
+
+    pulse = NormalizedBuildConsumer(applabel='translator_test_consumer_%s'
+                                    % uuid.uuid4(), connect=False)
     pulse.configure(topic=['build.#', 'unittest.#', 'talos.#'],
                     callback=on_pulse_message,
                     durable=False)
+    if options.pulse_cfg:
+        if not os.path.exists(options.pulse_cfg):
+            print 'Config file does not exist!'
+            return
+        cfg = ConfigParser.ConfigParser()
+        cfg.read(options.pulse_cfg)
+        pulse.config = PulseConfiguration.read_from_config(
+            cfg, options.pulse_cfg_section)
+
     pulse.listen()
 
+
+if __name__ == '__main__':
+    main()

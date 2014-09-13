@@ -2,9 +2,13 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this file,
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 
-from daemon import createDaemon
+import ConfigParser
 import optparse
 import os
+
+from mozillapulse.config import PulseConfiguration
+
+from daemon import createDaemon
 from pulsetranslator import PulseBuildbotTranslator
 
 def main():
@@ -25,15 +29,30 @@ def main():
                       action='store_true',
                       default=False,
                       help='register a durable queue')
-    parser.add_option('--push-message',
-                      dest='message',
-                      help='path to file of a Pulse message to process')
     parser.add_option('--display-only',
                       dest='display_only',
                       action='store_true',
                       default=False,
-                      help='only display build properties and don\'t add jobs to the queue')
+                      help='only display build properties and don\'t add '
+                      'jobs to the queue')
+    parser.add_option('--pulse-cfg',
+                      dest='pulse_cfg',
+                      default='',
+                      help='optional config file containing optional sections '
+                      '[consumer] and [publisher] for nondefault Pulse '
+                      'configs')
     options, args = parser.parse_args()
+
+    pulse_cfgs = {'consumer': None, 'publisher': None}
+    if options.pulse_cfg:
+        if not os.path.exists(options.pulse_cfg):
+            print 'Config file does not exist!'
+            return
+        pulse_cfgfile = ConfigParser.ConfigParser()
+        pulse_cfgfile.read(options.pulse_cfg)
+        for section in pulse_cfgs.keys():
+            pulse_cfgs[section] = PulseConfiguration.read_from_config(
+                pulse_cfgfile, section)
 
     if options.daemon:
         if os.access(options.logfile, os.F_OK):
@@ -46,8 +65,9 @@ def main():
 
     service = PulseBuildbotTranslator(durable=options.durable,
                                       logdir=options.logdir,
-                                      message=options.message,
-                                      display_only=options.display_only)
+                                      display_only=options.display_only,
+                                      consumer_cfg=pulse_cfgs['consumer'],
+                                      publisher_cfg=pulse_cfgs['publisher'])
     service.start()
 
 if __name__ == "__main__":
