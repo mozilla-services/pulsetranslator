@@ -366,10 +366,10 @@ class PulseBuildbotTranslator(object):
                     if match.group(4) or 'xulrunner' in builddata['tags']:
                         builddata['product'] = 'xulrunner'
 
-                    # Sadly, the build url for emulator builds isn't published to the pulse stream,
-                    # so we have to guess it.  See bug 1071642.
-                    if 'emulator' in builddata.get('platform', '') and \
-                            'try' not in key and builddata.get('buildid'):
+                    # Sadly, the build url for emulator builds isn't published to the
+                    # pulse stream, so we have to guess it.  See bug 1071642.
+                    if ('emulator' in builddata.get('platform', '') and
+                            'try' not in key and builddata.get('buildid')):
                         builddata['buildurl'] = (
                             'https://pvtbuilds.mozilla.org/pub/mozilla.org/b2g/tinderbox-builds' +
                             '/%s-%s/%s/emulator.tar.gz' %
