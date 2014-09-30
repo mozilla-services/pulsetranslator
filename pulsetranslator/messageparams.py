@@ -39,6 +39,9 @@ os_conversions = {
 }
 
 platforms = {
+    'emulator': ['emulator'],
+    'emulator-kk': ['emulator-kk'],
+    'emulator-jb': ['emulator-jb'],
     'linux32_gecko': ['linux32_gecko'],
     'linux64_gecko': ['linux64_gecko'],
     'linux64-rpm': ['fedora64'],

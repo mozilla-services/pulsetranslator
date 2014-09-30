@@ -336,7 +336,7 @@ class PulseBuildbotTranslator(object):
                         if not builddata['platform']:
                             raise BadPulseMessageError(key, 'no "platform" property')
 
-                otherRe = re.compile(r'build\.((release-|jetpack-)?(%s)[-|_](xulrunner[-|_])?(%s)([-|_]?)(.*?))\.(\d+)\.(log_uploaded|finished)' %
+                otherRe = re.compile(r'build\.((release-|jetpack-|b2g_)?(%s)[-|_](xulrunner[-|_])?(%s)([-|_]?)(.*?))\.(\d+)\.(log_uploaded|finished)' %
                                      (builddata['tree'], builddata['platform']))
                 match = otherRe.match(key)
                 if match:
@@ -366,6 +366,15 @@ class PulseBuildbotTranslator(object):
 
                     if match.group(4) or 'xulrunner' in builddata['tags']:
                         builddata['product'] = 'xulrunner'
+
+                    # Sadly, the build url for emulator builds isn't published to the
+                    # pulse stream, so we have to guess it.  See bug 1071642.
+                    if ('emulator' in builddata.get('platform', '') and
+                            'try' not in key and builddata.get('buildid')):
+                        builddata['buildurl'] = (
+                            'https://pvtbuilds.mozilla.org/pub/mozilla.org/b2g/tinderbox-builds' +
+                            '/%s-%s/%s/emulator.tar.gz' %
+                            (builddata['tree'], builddata['platform'], builddata['buildid']))
 
                     # In case of repacks we have to send multiple notifications,
                     # each for every locale included. We can remove this workaround
