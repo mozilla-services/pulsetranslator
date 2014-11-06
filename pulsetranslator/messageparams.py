@@ -50,7 +50,7 @@ platforms = {
     'linux64-mulet': ['linux64-mulet', 'ubuntu64_vm-mulet'],
     'linuxqt': ['fedora'],
     'linux-rpm': ['fedora'],
-    'linux': ['fedora', 'linux', 'ubuntu32', 'ubuntu32_vm'],
+    'linux': ['fedora', 'linux', 'ubuntu32', 'ubuntu32_vm', 'ubuntu32_hw'],
     'win32': ['xp', 'win7', 'win8', 'win7-ix', 'xp-ix'],
     'win32_gecko': ['win32_gecko'],
     'win32-mulet': ['win32-mulet'],
@@ -59,10 +59,10 @@ platforms = {
     'macosx64_gecko': ['macosx64_gecko', 'mountainlion-b2gdt'],
     'macosx64-mulet': ['macosx64-mulet'],
     'macosx': ['macosx', 'leopard'],
-    'android-armv6': ['ubuntu64_vm_armv6_mobile'],
+    'android-armv6': ['ubuntu64_vm_armv6_mobile', 'ubuntu64_vm_armv6_large'],
     'android-x86': ['android-x86', 'ubuntu64_hw'],
     'android': ['panda_android', 'ubuntu64_vm_mobile', 'ubuntu64_vm_large'],
-    'ics_armv7a_gecko': ['fedora-b2g', 'ubuntu64-b2g'],
+    'ics_armv7a_gecko': ['ubuntu64-b2g'],
 }
 
 tags = [
