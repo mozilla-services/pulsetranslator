@@ -72,8 +72,6 @@ class LogHandler(object):
         retrying = False
 
         while True:
-            # If it's been less than 15s since we checked for this particular
-            # log, put this item back in the queue without checking again.
             now = calendar.timegm(time.gmtime())
 
             code, content_length = self.get_url_info(str(data['logurl']))
