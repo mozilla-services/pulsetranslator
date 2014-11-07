@@ -12,7 +12,6 @@ import os
 import re
 import socket
 import time
-import traceback
 
 from dateutil.parser import parse
 from mozillapulse import consumers
@@ -77,7 +76,6 @@ class PulseBuildbotTranslator(object):
             except Exception:
                 self.error_logger.exception(
                     "Error occurred during pulse.listen()")
-                traceback.print_exc()
 
             now = datetime.datetime.now()
             failures = [x for x in failures
@@ -271,8 +269,7 @@ class PulseBuildbotTranslator(object):
                 builddata['locale'] = 'en-US'
 
             # status of the build or test notification
-            # see http://hg.mozilla.org/build/buildbot/file/08b7c51d2962/
-            #     master/buildbot/status/builder.py#l25
+            # see http://hg.mozilla.org/build/buildbot/file/08b7c51d2962/master/buildbot/status/builder.py#l25
             builddata['status'] = data['payload']['build']['results']
 
             if 'debug' in key:

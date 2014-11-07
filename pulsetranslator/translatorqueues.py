@@ -4,7 +4,6 @@
 
 import datetime
 import time
-import traceback
 
 from mozillapulse.messages.base import GenericMessage
 
@@ -28,13 +27,14 @@ def publish_message(publisherClass, logger, data, routing_key, pulse_cfg):
         except Exception:
             now = datetime.datetime.now()
             logger.exception('Failure when publishing %s' % routing_key)
-            traceback.print_exc()
 
             failures = [x for x in failures
                         if now - x < datetime.timedelta(seconds=60)]
             failures.append(now)
 
             if len(failures) >= 5:
+                logger.warning('%d publish failures within one minute.'
+                               % len(failures))
                 failures = []
                 sleep_time = 5 * 60
             else:
