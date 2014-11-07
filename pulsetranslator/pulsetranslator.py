@@ -12,15 +12,16 @@ import os
 import re
 import socket
 import time
-import traceback
 
 from dateutil.parser import parse
 from mozillapulse import consumers
-from multiprocessing import Process, Queue
 
-from translatorexceptions import *
-from loghandler import LogHandler
 import messageparams
+
+from loghandler import LogHandler
+from translatorexceptions import (BadLocalesError, BadOSError,
+                                  BadPlatformError, BadPulseMessageError,
+                                  BadTagError, NoBuildUrlError, NoLogUrlError)
 
 
 class PulseBuildbotTranslator(object):
@@ -34,30 +35,31 @@ class PulseBuildbotTranslator(object):
         self.consumer_cfg = consumer_cfg
         self.publisher_cfg = publisher_cfg
 
-        self.queue = Queue()
-
         if not os.access(self.logdir, os.F_OK):
             os.mkdir(self.logdir)
 
-        self.badPulseMessageLogger = self.get_logger('BadPulseMessage',
-                                                     'bad_pulse_message.log')
-        self.errorLogger = self.get_logger('ErrorLog', 'error.log')
+        self.bad_pulse_msg_logger = self.get_logger('BadPulseMessage',
+                                                    'bad_pulse_message.log')
+        self.error_logger = self.get_logger('ErrorLog', 'error.log')
+
+        loghandler_error_logger = self.get_logger('LogHandlerErrorLog',
+                                                  'log_handler_error.log')
+        self.loghandler = LogHandler(loghandler_error_logger,
+                                     self.publisher_cfg)
 
     def get_logger(self, name, filename):
         filepath = os.path.join(self.logdir, filename)
-        if os.access(filepath, os.F_OK):
-            os.remove(filepath)
         logger = logging.getLogger(name)
         logger.setLevel(logging.DEBUG)
-        logger.addHandler(logging.handlers.RotatingFileHandler(filepath, maxBytes=300000, backupCount=2))
+        handler = logging.handlers.RotatingFileHandler(
+            filepath, mode='a+', maxBytes=300000, backupCount=2)
+        formatter = logging.Formatter(
+            "%(asctime)s - %(levelname)s: %(message)s", "%Y-%m-%d %H:%M:%S")
+        handler.setFormatter(formatter)
+        logger.addHandler(handler)
         return logger
 
     def start(self):
-        loghandler = LogHandler(self.queue, os.getpid(), self.logdir,
-                                self.publisher_cfg)
-        self.logprocess = Process(target=loghandler.start)
-        self.logprocess.start()
-
         # Start listening for pulse messages. If 5 failures in a
         # minute, wait 5 minutes before retrying.
         failures = []
@@ -68,11 +70,13 @@ class PulseBuildbotTranslator(object):
                             durable=self.durable)
             if self.consumer_cfg:
                 pulse.config = self.consumer_cfg
+
             try:
                 pulse.listen()
             except Exception:
-                self.errorLogger.exception("Error occurred during pulse.listen()")
-                traceback.print_exc()
+                self.error_logger.exception(
+                    "Error occurred during pulse.listen()")
+
             now = datetime.datetime.now()
             failures = [x for x in failures
                         if now - x < datetime.timedelta(seconds=60)]
@@ -96,13 +100,14 @@ class PulseBuildbotTranslator(object):
         if data['platform'] not in messageparams.platforms:
             raise BadPlatformError(data['key'], data['platform'])
         elif data['os'] not in messageparams.platforms[data['platform']]:
-            raise BadOSError(data['key'], data['platform'], data['os'], data['buildername'])
+            raise BadOSError(data['key'], data['platform'], data['os'],
+                             data['buildername'])
 
         if self.display_only:
             print "Test properties:\n%s\n" % json.dumps(data)
             return
 
-        self.queue.put(data)
+        self.loghandler.handle_message(data)
 
     def process_build(self, data):
         if data['platform'] not in messageparams.platforms:
@@ -120,7 +125,7 @@ class PulseBuildbotTranslator(object):
             print "Build properties:\n%s\n" % json.dumps(data)
             return
 
-        self.queue.put(data)
+        self.loghandler.handle_message(data)
 
     def on_pulse_message(self, data, message=None):
         key = 'unknown'
@@ -160,7 +165,8 @@ class PulseBuildbotTranslator(object):
                           'timestamp': datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ'),
                         }
 
-            # scan the payload for properties applicable to both tests and builds
+            # scan the payload for properties applicable to both tests and
+            # builds
             for property in data['payload']['build']['properties']:
 
                 # look for the job number
@@ -206,9 +212,12 @@ class PulseBuildbotTranslator(object):
                 # look for platform
                 elif property[0] == 'platform':
                     builddata['platform'] = property[1]
-                    if '-debug' in builddata['platform']:
-                        # strip '-debug' from the platform string if it's present
-                        builddata['platform'] = builddata['platform'][0:builddata['platform'].find('-debug')]
+                    if (builddata['platform'] and
+                        '-debug' in builddata['platform']):
+                        # strip '-debug' from the platform string if it's
+                        # present
+                        builddata['platform'] = builddata['platform'][
+                            0:builddata['platform'].find('-debug')]
 
                 # look for the locale
                 elif property[0] == 'locale':
@@ -291,7 +300,8 @@ class PulseBuildbotTranslator(object):
 
                 builddata['os'] = match.groups()[2]
                 if builddata['os'] in messageparams.os_conversions:
-                    builddata['os'] = messageparams.os_conversions[builddata['os']](builddata)
+                    builddata['os'] = messageparams.os_conversions[
+                        builddata['os']](builddata)
 
                 builddata['test'] = match.groups()[5]
 
@@ -367,18 +377,20 @@ class PulseBuildbotTranslator(object):
                     if match.group(4) or 'xulrunner' in builddata['tags']:
                         builddata['product'] = 'xulrunner'
 
-                    # Sadly, the build url for emulator builds isn't published to the
-                    # pulse stream, so we have to guess it.  See bug 1071642.
+                    # Sadly, the build url for emulator builds isn't published
+                    # to the pulse stream, so we have to guess it.  See bug
+                    # 1071642.
                     if ('emulator' in builddata.get('platform', '') and
                             'try' not in key and builddata.get('buildid')):
                         builddata['buildurl'] = (
                             'https://pvtbuilds.mozilla.org/pub/mozilla.org/b2g/tinderbox-builds' +
                             '/%s-%s/%s/emulator.tar.gz' %
-                            (builddata['tree'], builddata['platform'], builddata['buildid']))
+                            (builddata['tree'], builddata['platform'],
+                             builddata['buildid']))
 
                     # In case of repacks we have to send multiple notifications,
-                    # each for every locale included. We can remove this workaround
-                    # once bug 857971 has been fixed.
+                    # each for every locale included. We can remove this
+                    # workaround once bug 857971 has been fixed.
                     if 'repack' in key:
                         builddata['repack'] = True
 
@@ -396,7 +408,8 @@ class PulseBuildbotTranslator(object):
                     raise BadPulseMessageError(key, "unknown message type")
 
         except BadPulseMessageError:
-            self.badPulseMessageLogger.exception(json.dumps(data.get('payload'), indent=2))
+            self.bad_pulse_msg_logger.exception(json.dumps(data.get('payload'),
+                                                           indent=2))
         except Exception:
-            self.errorLogger.exception(json.dumps(data, indent=2))
+            self.error_logger.exception(json.dumps(data, indent=2))
 
