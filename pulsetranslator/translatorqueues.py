@@ -10,30 +10,36 @@ from mozillapulse.messages.base import GenericMessage
 
 
 def publish_message(publisherClass, logger, data, routing_key, pulse_cfg):
-    publisher = publisherClass(connect=False)
-    if pulse_cfg:
-        publisher.config = pulse_cfg
+    assert(isinstance(data, dict))
+
     msg = GenericMessage()
     msg.routing_parts = routing_key.split('.')
-    assert(isinstance(data, dict))
     for key, value in data.iteritems():
         msg.set_data(key, value)
 
     failures = []
     while True:
-        # keep re-trying in case of failure
         try:
+            publisher = publisherClass(connect=False)
+            if pulse_cfg:
+                publisher.config = pulse_cfg
             publisher.publish(msg)
             break
         except Exception:
             now = datetime.datetime.now()
-            logger.exception('[%s] %s' % (now, routing_key))
+            logger.exception('Failure when publishing %s' % routing_key)
             traceback.print_exc()
+
             failures = [x for x in failures
                         if now - x < datetime.timedelta(seconds=60)]
             failures.append(now)
+
             if len(failures) >= 5:
                 failures = []
-                time.sleep(5 * 60)
+                sleep_time = 5 * 60
             else:
-                time.sleep(5)
+                sleep_time = 5
+
+            logger.warning('Sleeping for %d seconds.' % sleep_time)
+            time.sleep(sleep_time)
+            logger.warning('Retrying...')
