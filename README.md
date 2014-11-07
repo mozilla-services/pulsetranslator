@@ -11,6 +11,28 @@ The normalized messages are published to the exchange
 "exchange/build/normalized".
 
 
+Installing, Configuring, and Running
+------------------------------------
+
+Install pulsetranslator as any regular Python package:
+
+    python setup.py install
+
+You'll need to create a ini-style config file with information on the
+Pulse accounts.  It should have both [publisher] and [consumer]
+sections, and both must contain at least "user" and "password"
+options.  They can also include any of the standard mozillapulse
+[configuration options][].
+
+The minimum command line to run pulsetranslator is
+
+    runtranslator --pulse-cfg=<path to config file>
+
+You can get help on other options by running
+
+    runtranslator -h
+
+
 Routing Keys
 ------------
 
@@ -40,10 +62,11 @@ Pulsebuildmonitor
 -----------------
 
 For simple uses, you may be able to consume messages directly from the
-"org.mozilla.exchange.build.normalized" exchange.  For more complex
-uses, you may find it easier to use
-[pulsebuildmonitor](http://hg.mozilla.org/automation/pulsebuildmonitor),
-which can filter messages for you based on a number of criteria.  See
-the
-[README](http://hg.mozilla.org/automation/pulsebuildmonitor/file/tip/README.txt)
+"exchange/build/normalized" exchange.  For more complex uses, you may
+find it easier to use [pulsebuildmonitor][], which can filter messages
+for you based on a number of criteria.  See the [pulsebuildmonitor README][]
 for more details.
+
+[configuration options]: https://hg.mozilla.org/automation/mozillapulse/file/tip/mozillapulse/config.py
+[pulsebuildmonitor]: http://hg.mozilla.org/automation/pulsebuildmonitor
+[pulsebuildmonitor README]: http://hg.mozilla.org/automation/pulsebuildmonitor/file/tip/README.txt

@@ -26,9 +26,9 @@ def publish_message(publisherClass, logger, data, routing_key, pulse_cfg):
             publisher.publish(msg)
             break
         except Exception:
-            logger.exception(routing_key)
-            traceback.print_exc()
             now = datetime.datetime.now()
+            logger.exception('[%s] %s' % (now, routing_key))
+            traceback.print_exc()
             failures = [x for x in failures
                         if now - x < datetime.timedelta(seconds=60)]
             failures.append(now)

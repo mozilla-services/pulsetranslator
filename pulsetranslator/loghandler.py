@@ -5,20 +5,13 @@
 import calendar
 import httplib
 import json
-import logging
-import logging.handlers
-import os
-import platform
-import subprocess
-import sys
 import time
 
-from Queue import Empty
 from urlparse import urlparse
 
 from mozillapulse.publishers import NormalizedBuildPublisher
 
-from translatorexceptions import *
+from translatorexceptions import LogTimeoutError
 from translatorqueues import publish_message
 
 DEBUG = False
@@ -26,20 +19,9 @@ DEBUG = False
 
 class LogHandler(object):
 
-    def __init__(self, queue, parent_pid, logdir, publisher_cfg):
-        self.queue = queue
-        self.parent_pid = parent_pid
-        self.logdir = logdir
+    def __init__(self, error_logger, publisher_cfg):
+        self.error_logger = error_logger
         self.publisher_cfg = publisher_cfg
-
-    def get_logger(self, name, filename):
-        filepath = os.path.join(self.logdir, filename)
-        if os.access(filepath, os.F_OK):
-            os.remove(filepath)
-        logger = logging.getLogger(name)
-        logger.setLevel(logging.DEBUG)
-        logger.addHandler(logging.handlers.RotatingFileHandler(filepath, maxBytes=300000, backupCount=2))
-        return logger
 
     def get_url_info(self, url):
         """Return a (code, content_length) tuple from making an
@@ -87,37 +69,33 @@ class LogHandler(object):
             # should log this
             return
 
-        # If it's been less than 15s since we checked for this particular
-        # log, put this item back in the queue without checking again.
-        now = calendar.timegm(time.gmtime())
-        last_check = data.get('last_check', 0)
-        if last_check and now - last_check < 15:
-            self.queue.put(data)
-            return
+        retrying = False
 
-        code, content_length = self.get_url_info(str(data['logurl']))
-        if DEBUG:
-            if data.get('last_check'):
-                print '...reprocessing logfile', code, data.get('logurl')
-                print '...', data.get('key')
-                print '...', now - data.get('insertion_time', 0), 'seconds since insertion_time'
+        while True:
+            # If it's been less than 15s since we checked for this particular
+            # log, put this item back in the queue without checking again.
+            now = calendar.timegm(time.gmtime())
+
+            code, content_length = self.get_url_info(str(data['logurl']))
+            if DEBUG:
+                if retrying:
+                    print '...reprocessing logfile', code, data.get('logurl')
+                    print '...', data.get('key')
+                    print '...', now - data.get('insertion_time', 0), 'seconds since insertion_time'
+                else:
+                    print 'processing logfile', code, data.get('logurl')
+            if code == 200:
+                publish_method(data)
+                break
             else:
-                print 'processing logfile', code, data.get('logurl')
-        if code == 200:
-            publish_method(data)
-        else:
-            if now - data.get('insertion_time', 0) > 600:
-                # Currently, this is raised for unittests from beta and aurora
-                # builds at least, as their log files get stored in a place
-                # entirely different than the builds.  This should change soon
-                # per bug 713846, so I've not adapted the code to handle this.
-                raise LogTimeoutError(data.get('key', 'unknown'), data.get('logurl'))
-            else:
-                # re-insert this into the queue
-                data['last_check'] = now
-                if DEBUG:
-                    print 'requeueing after check'
-                self.queue.put(data)
+                if now - data.get('insertion_time', 0) > 600:
+                    raise LogTimeoutError(data.get('key', 'unknown'),
+                                          data.get('logurl'))
+                else:
+                    retrying = True
+                    if DEBUG:
+                        print 'sleeping 15 seconds before retrying'
+                    time.sleep(15)
 
     def publish_unittest_message(self, data):
         # The original routing key has the format build.foo.bar.finished;
@@ -138,7 +116,7 @@ class LogHandler(object):
                      product,
                      original_key]
 
-        publish_message(NormalizedBuildPublisher, self.errorLogger, data,
+        publish_message(NormalizedBuildPublisher, self.error_logger, data,
                         '.'.join(key_parts), self.publisher_cfg)
 
     def publish_build_message(self, data):
@@ -154,54 +132,21 @@ class LogHandler(object):
                 key_parts.append(tag)
         key_parts.append(original_key)
 
-        publish_message(NormalizedBuildPublisher, self.errorLogger, data,
+        publish_message(NormalizedBuildPublisher, self.error_logger, data,
                         '.'.join(key_parts), self.publisher_cfg)
 
-    def start(self):
-        self.errorLogger = self.get_logger('LogHandlerErrorLog', 'log_handler_error.log')
-        while True:
-            try:
-                data = None
-
-                # Check if the parent process is still alive, and if so,
-                # look for another log to process.
-                if 'windows' in platform.system().lower():
-                    proc = subprocess.Popen(['tasklist', '-FI', 'PID eq %d' % self.parent_pid],
-                                            stderr=subprocess.STDOUT,
-                                            stdout=subprocess.PIPE)
-                    if not proc.wait():
-                        result = proc.stdout.read()
-                        if not str(self.parent_pid) in result:
-                            raise OSError
-                    else:
-                        raise Exception("Unable to call tasklist")
-                else:
-                    os.kill(self.parent_pid, 0)
-                data = self.queue.get_nowait()
-
-                # publish the right kind of message based on the data.
-                # if it's not a unittest, presume it's a build.
-                if data.get("test"):
-                    self.process_data(
-                        data,
-                        publish_method=self.publish_unittest_message
-                    )
-                else:
-                    self.process_data(
-                        data,
-                        publish_method=self.publish_build_message
-                    )
-
-            except Empty:
-                time.sleep(5)
-                continue
-            except OSError:
-                # if the parent process isn't alive, shutdown gracefully
-                # XXX: Need to drain the queue to a file before shutting
-                # down, so we can pick up where we left off when we resume.
-                sys.exit(0)
-            except Exception:
-                obj_to_log = data
-                if data.get('payload') and data['payload'].get('build') and data['payload']['build'].get('properties'):
-                    obj_to_log = data['payload']['build']['properties']
-                self.errorLogger.exception(json.dumps(obj_to_log, indent=2))
+    def handle_message(self, data):
+        try:
+            # publish the right kind of message based on the data.
+            # if it's not a unittest, presume it's a build.
+            if data.get("test"):
+                publish_method = self.publish_unittest_message
+            else:
+                publish_method = self.publish_build_message
+            self.process_data(data, publish_method=publish_method)
+        except Exception:
+            obj_to_log = data
+            if (data.get('payload') and data['payload'].get('build') and
+                data['payload']['build'].get('properties')):
+                obj_to_log = data['payload']['build']['properties']
+            self.error_logger.exception(json.dumps(obj_to_log, indent=2))
