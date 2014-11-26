@@ -1,0 +1,2608 @@
+{
+  "payload": {
+    "build": {
+      "slave": "w64-ix-slave72",
+      "builderName": "release-mozilla-release-win32_build",
+      "text": [
+        "build",
+        "successful"
+      ],
+      "number": 4,
+      "currentStep": null,
+      "results": 0,
+      "blame": [
+        "lsblakk@mozilla.com"
+      ],
+      "reason": "downstream",
+      "eta": null,
+      "steps": [
+        {
+          "statistics": {
+
+          },
+          "name": "set_basedir",
+          "isFinished": true,
+          "text": [
+            "set props:",
+            "basedir"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365562192.2376289,
+            1365562192.982738
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 0,
+          "expectations": [
+            [
+              "output",
+              6354,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "set_hashType",
+          "isFinished": true,
+          "text": [
+            "set props:",
+            "hashType"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365562192.9842241,
+            1365562193.116663
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 1,
+          "expectations": [
+            [
+              "output",
+              6305,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "set_builddir",
+          "isFinished": true,
+          "text": [
+            "set props:",
+            "builddir"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365562193.1178501,
+            1365562193.2442861
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 2,
+          "expectations": [
+            [
+              "output",
+              6357,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "rm_buildtools",
+          "isFinished": true,
+          "text": [
+            "clobber",
+            "build tools"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365562193.2461181,
+            1365562193.371177
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 3,
+          "expectations": [
+            [
+              "output",
+              6304,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "clone_buildtools",
+          "isFinished": true,
+          "text": [
+            "clone",
+            "build tools"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365562193.372803,
+            1365562208.396708
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 4,
+          "expectations": [
+            [
+              "output",
+              6612,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "set_toolsdir",
+          "isFinished": true,
+          "text": [
+            "set props:",
+            "toolsdir"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365562208.3975439,
+            1365562208.5210071
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 5,
+          "expectations": [
+            [
+              "output",
+              6364,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "checking_clobber_times",
+          "isFinished": true,
+          "text": [
+            "checking",
+            "clobber",
+            "times"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365562208.5217919,
+            1365562209.4932139
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 6,
+          "expectations": [
+            [
+              "output",
+              7333,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "clean_old_builds",
+          "isFinished": true,
+          "text": [
+            "set props:",
+            "purge_actual",
+            "purge_target"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365562209.494489,
+            1365562279.2387609
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 7,
+          "expectations": [
+            [
+              "output",
+              7923,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "set_buildids",
+          "isFinished": true,
+          "text": [
+            "set_buildids"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365562279.2399061,
+            1365562279.240237
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 8,
+          "expectations": [
+
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "setproperty",
+          "isFinished": true,
+          "text": [
+            "set props:",
+            "toolsdir"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365562279.2410581,
+            1365562279.3691721
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 9,
+          "expectations": [
+            [
+              "output",
+              6370,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "setproperty_1",
+          "isFinished": true,
+          "text": [
+            "set props:",
+            "basedir"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365562279.3711669,
+            1365562280.1954441
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 10,
+          "expectations": [
+            [
+              "output",
+              6360,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "rm_mozharness",
+          "isFinished": true,
+          "text": [
+            "remove",
+            "mozharness"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365562280.196198,
+            1365562280.3175559
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 11,
+          "expectations": [
+            [
+              "output",
+              6314,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "hg_clone_mozharness",
+          "isFinished": true,
+          "text": [
+            "checkout",
+            "mozharness"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365562280.3183751,
+            1365562282.8331239
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 12,
+          "expectations": [
+            [
+              "output",
+              7187,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "hg_update_mozharness",
+          "isFinished": true,
+          "text": [
+            "updating",
+            "mozharness",
+            "to",
+            "FIREFOX_20_0_1_RELEASE"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365562282.83446,
+            1365562283.318588
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 13,
+          "expectations": [
+            [
+              "output",
+              6433,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "rm_old_pkg",
+          "isFinished": true,
+          "text": [
+            "delete",
+            "old",
+            "package"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365562283.320168,
+            1365562283.4492781
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 14,
+          "expectations": [
+            [
+              "output",
+              7776,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "hg_update",
+          "isFinished": true,
+          "text": [
+            "update"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365562283.4507999,
+            1365563237.255671
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 15,
+          "expectations": [
+            [
+              "output",
+              31367,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "hg_update_1",
+          "isFinished": true,
+          "text": [
+            "'hg",
+            "up",
+            "...'"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365563237.258059,
+            1365563240.2014949
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 16,
+          "expectations": [
+            [
+              "output",
+              6431,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "set_got_revision",
+          "isFinished": true,
+          "text": [
+            "set props:",
+            "got_revision"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365563240.2033091,
+            1365563242.03531
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 17,
+          "expectations": [
+            [
+              "output",
+              6325,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "set_comments",
+          "isFinished": true,
+          "text": [
+            "set props:",
+            "comments"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365563242.03794,
+            1365563242.0405519
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 18,
+          "expectations": [
+
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "get_mozconfig",
+          "isFinished": true,
+          "text": [
+            "got",
+            "mozconfig"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365563242.0415139,
+            1365563242.7537179
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 19,
+          "expectations": [
+            [
+              "output",
+              8580,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "cat_mozconfig",
+          "isFinished": true,
+          "text": [
+            "'cat",
+            ".mozconfig'"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365563242.755327,
+            1365563243.0855811
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 20,
+          "expectations": [
+            [
+              "output",
+              7236,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "compile",
+          "isFinished": true,
+          "text": [
+            "compile"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365563243.0874851,
+            1365576447.821156
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 21,
+          "expectations": [
+            [
+              "output",
+              26683442,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "rm_nonce",
+          "isFinished": true,
+          "text": [
+            "remove",
+            "old",
+            "nonce"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365576447.822983,
+            1365576447.970978
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 22,
+          "expectations": [
+            [
+              "output",
+              6302,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "download_token",
+          "isFinished": true,
+          "text": [
+            "downloading",
+            "to",
+            "token"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365576447.972518,
+            1365576448.252461
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 23,
+          "expectations": [
+
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "make_buildsymbols",
+          "isFinished": true,
+          "text": [
+            "'python",
+            "e:/builds/moz2_slave/rel-m-rel-w32_bld-000000000000/build/build/pymake/make.py",
+            "...'"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365576448.2536449,
+            1365576748.4625471
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 24,
+          "expectations": [
+            [
+              "output",
+              54484,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "make_uploadsymbols",
+          "isFinished": true,
+          "text": [
+            "'python",
+            "e:/builds/moz2_slave/rel-m-rel-w32_bld-000000000000/tools/buildfarm/utils/retry.py",
+            "...'"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365576748.464571,
+            1365576767.4403679
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 25,
+          "expectations": [
+            [
+              "output",
+              25150,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "make_pkg_tests",
+          "isFinished": true,
+          "text": [
+            "'python",
+            "e:/builds/moz2_slave/rel-m-rel-w32_bld-000000000000/build/build/pymake/make.py",
+            "...'"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365576767.4431231,
+            1365576958.2978151
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 26,
+          "expectations": [
+            [
+              "output",
+              43968,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "make_pkg",
+          "isFinished": true,
+          "text": [
+            "'python",
+            "e:/builds/moz2_slave/rel-m-rel-w32_bld-000000000000/build/build/pymake/make.py",
+            "...'"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365576958.2996311,
+            1365577075.6402349
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 27,
+          "expectations": [
+            [
+              "output",
+              558158,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "make_installer",
+          "isFinished": true,
+          "text": [
+            "'python",
+            "e:/builds/moz2_slave/rel-m-rel-w32_bld-000000000000/build/build/pymake/make.py",
+            "...'"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365577075.641808,
+            1365577146.4164109
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 28,
+          "expectations": [
+            [
+              "output",
+              502438,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "get_build_id",
+          "isFinished": true,
+          "text": [
+            "set props:",
+            "buildid"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365577146.418138,
+            1365577146.586277
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 29,
+          "expectations": [
+            [
+              "output",
+              6498,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "get_app_version",
+          "isFinished": true,
+          "text": [
+            "set props:",
+            "appVersion"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365577146.587754,
+            1365577146.716018
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 30,
+          "expectations": [
+            [
+              "output",
+              6490,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "get_app_name",
+          "isFinished": true,
+          "text": [
+            "set props:",
+            "appName"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365577146.718137,
+            1365577146.8467231
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 31,
+          "expectations": [
+            [
+              "output",
+              6485,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "make_update_pkg",
+          "isFinished": true,
+          "text": [
+            "'python",
+            "e:/builds/moz2_slave/rel-m-rel-w32_bld-000000000000/build/build/pymake/make.py",
+            "...'"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365577146.8488569,
+            1365577681.063992
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 32,
+          "expectations": [
+            [
+              "output",
+              69935,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "rm_current_unpack_dir",
+          "isFinished": true,
+          "text": [
+            "'rm",
+            "-rf",
+            "...'"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365577681.0648029,
+            1365577683.0916231
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 33,
+          "expectations": [
+            [
+              "output",
+              7755,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "make_current_unpack_dir",
+          "isFinished": true,
+          "text": [
+            "'mkdir",
+            "current'"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365577683.094466,
+            1365577684.817935
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 34,
+          "expectations": [
+            [
+              "output",
+              7717,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "unpack_current_mar",
+          "isFinished": true,
+          "text": [
+            "'perl",
+            "e:/builds/moz2_slave/rel-m-rel-w32_bld-000000000000/build/tools/update-packaging/unwrap_full_update.pl",
+            "...'"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365577684.8199461,
+            1365577697.851155
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 35,
+          "expectations": [
+            [
+              "output",
+              8028,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "rm_previous_unpack_dir",
+          "isFinished": true,
+          "text": [
+            "'rm",
+            "-rf",
+            "...'"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365577697.852694,
+            1365577698.0223241
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 36,
+          "expectations": [
+            [
+              "output",
+              7726,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "make_previous_unpack_dir",
+          "isFinished": true,
+          "text": [
+            "'mkdir",
+            "previous'"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365577698.024183,
+            1365577698.1516881
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 37,
+          "expectations": [
+            [
+              "output",
+              7719,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "get_previous_mar",
+          "isFinished": true,
+          "text": [
+            "get",
+            "previous",
+            "mar"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365577698.154376,
+            1365577709.1642411
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 38,
+          "expectations": [
+            [
+              "output",
+              48838,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "unpack_previous_mar",
+          "isFinished": true,
+          "text": [
+            "unpack",
+            "previous",
+            "mar"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365577709.1651001,
+            1365577719.0891449
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 39,
+          "expectations": [
+            [
+              "output",
+              7961,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "remove pgc files (current)",
+          "isFinished": true,
+          "text": [
+            "'find",
+            ".",
+            "...'"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365577719.0909419,
+            1365577719.217237
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 40,
+          "expectations": [
+            [
+              "output",
+              7756,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "remove pgc files (previous)",
+          "isFinished": true,
+          "text": [
+            "'find",
+            ".",
+            "...'"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365577719.2193639,
+            1365577719.3481951
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 41,
+          "expectations": [
+            [
+              "output",
+              7757,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "make_partial_mar",
+          "isFinished": true,
+          "text": [
+            "python",
+            "e:/builds/moz2_slave/rel-m-rel-w32_bld-000000000000/build/build/pymake/make.py",
+            "partial",
+            "mar"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365577719.3499849,
+            1365577912.569294
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 42,
+          "expectations": [
+            [
+              "output",
+              61645,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "check_partial_mar",
+          "isFinished": true,
+          "text": [
+            "check",
+            "partial",
+            "mar"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365577912.570888,
+            1365577912.6964159
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 43,
+          "expectations": [
+            [
+              "output",
+              6520,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "sign_partial_mar",
+          "isFinished": true,
+          "text": [
+            "sign",
+            "partial",
+            "mar"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365577912.6973801,
+            1365577916.1407039
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 44,
+          "expectations": [
+            [
+              "output",
+              10297,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "rm_previous_unpack_dir_1",
+          "isFinished": true,
+          "text": [
+            "'rm",
+            "-rf",
+            "...'"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365577916.143086,
+            1365577916.2714069
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 45,
+          "expectations": [
+            [
+              "output",
+              7726,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "make_previous_unpack_dir_1",
+          "isFinished": true,
+          "text": [
+            "'mkdir",
+            "previous'"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365577916.2737269,
+            1365577916.400208
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 46,
+          "expectations": [
+            [
+              "output",
+              7719,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "get_previous_mar_1",
+          "isFinished": true,
+          "text": [
+            "get",
+            "previous",
+            "mar"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365577916.4026141,
+            1365577925.031841
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 47,
+          "expectations": [
+            [
+              "output",
+              47977,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "unpack_previous_mar_1",
+          "isFinished": true,
+          "text": [
+            "unpack",
+            "previous",
+            "mar"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365577925.033447,
+            1365577934.755954
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 48,
+          "expectations": [
+            [
+              "output",
+              7961,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "remove pgc files (current)_1",
+          "isFinished": true,
+          "text": [
+            "'find",
+            ".",
+            "...'"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365577934.7576799,
+            1365577934.8832829
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 49,
+          "expectations": [
+            [
+              "output",
+              7756,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "remove pgc files (previous)_1",
+          "isFinished": true,
+          "text": [
+            "'find",
+            ".",
+            "...'"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365577934.884501,
+            1365577935.010704
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 50,
+          "expectations": [
+            [
+              "output",
+              7757,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "make_partial_mar_1",
+          "isFinished": true,
+          "text": [
+            "python",
+            "e:/builds/moz2_slave/rel-m-rel-w32_bld-000000000000/build/build/pymake/make.py",
+            "partial",
+            "mar"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365577935.012012,
+            1365578143.5590761
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 51,
+          "expectations": [
+            [
+              "output",
+              61872,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "check_partial_mar_1",
+          "isFinished": true,
+          "text": [
+            "check",
+            "partial",
+            "mar"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365578143.56107,
+            1365578143.6858411
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 52,
+          "expectations": [
+            [
+              "output",
+              6527,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "sign_partial_mar_1",
+          "isFinished": true,
+          "text": [
+            "sign",
+            "partial",
+            "mar"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365578143.6880929,
+            1365578149.2177601
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 53,
+          "expectations": [
+            [
+              "output",
+              10313,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "rm_previous_unpack_dir_2",
+          "isFinished": true,
+          "text": [
+            "'rm",
+            "-rf",
+            "...'"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365578149.2196929,
+            1365578149.347733
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 54,
+          "expectations": [
+            [
+              "output",
+              7726,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "make_previous_unpack_dir_2",
+          "isFinished": true,
+          "text": [
+            "'mkdir",
+            "previous'"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365578149.349534,
+            1365578149.475081
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 55,
+          "expectations": [
+            [
+              "output",
+              7719,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "get_previous_mar_2",
+          "isFinished": true,
+          "text": [
+            "get",
+            "previous",
+            "mar"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365578149.476531,
+            1365578152.665329
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 56,
+          "expectations": [
+            [
+              "output",
+              47657,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "unpack_previous_mar_2",
+          "isFinished": true,
+          "text": [
+            "unpack",
+            "previous",
+            "mar"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365578152.6672831,
+            1365578162.392302
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 57,
+          "expectations": [
+            [
+              "output",
+              7961,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "remove pgc files (current)_2",
+          "isFinished": true,
+          "text": [
+            "'find",
+            ".",
+            "...'"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365578162.3938439,
+            1365578162.523459
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 58,
+          "expectations": [
+            [
+              "output",
+              7756,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "remove pgc files (previous)_2",
+          "isFinished": true,
+          "text": [
+            "'find",
+            ".",
+            "...'"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365578162.52582,
+            1365578162.6549211
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 59,
+          "expectations": [
+            [
+              "output",
+              7757,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "make_partial_mar_2",
+          "isFinished": true,
+          "text": [
+            "python",
+            "e:/builds/moz2_slave/rel-m-rel-w32_bld-000000000000/build/build/pymake/make.py",
+            "partial",
+            "mar"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365578162.656975,
+            1365578373.9484439
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 60,
+          "expectations": [
+            [
+              "output",
+              62012,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "check_partial_mar_2",
+          "isFinished": true,
+          "text": [
+            "check",
+            "partial",
+            "mar"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365578373.9504011,
+            1365578374.075758
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 61,
+          "expectations": [
+            [
+              "output",
+              6527,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "sign_partial_mar_2",
+          "isFinished": true,
+          "text": [
+            "sign",
+            "partial",
+            "mar"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365578374.0773339,
+            1365578380.0007501
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 62,
+          "expectations": [
+            [
+              "output",
+              10313,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "echo_buildID",
+          "isFinished": true,
+          "text": [
+            "'bash",
+            "-c",
+            "...'"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365578380.003438,
+            1365578380.1298871
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 63,
+          "expectations": [
+            [
+              "output",
+              6405,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "make_upload",
+          "isFinished": true,
+          "text": [
+            "set props:",
+            "symbolsUrl",
+            "packageUrl",
+            "partialMarUrl",
+            "completeMarUrl",
+            "testsUrl",
+            "jsshellUrl"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365578380.1324589,
+            1365578491.9210329
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 64,
+          "expectations": [
+            [
+              "output",
+              25090,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "sendchange",
+          "isFinished": true,
+          "text": [
+            "sendchange"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365578491.9228921,
+            1365578493.5629051
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 65,
+          "expectations": [
+            [
+              "output",
+              9696,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "sendchange_1",
+          "isFinished": true,
+          "text": [
+            "sendchange"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365578493.564796,
+            1365578494.365768
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 66,
+          "expectations": [
+            [
+              "output",
+              10247,
+              null
+            ]
+          ]
+        },
+        {
+          "statistics": {
+
+          },
+          "name": "trigger",
+          "isFinished": true,
+          "text": [
+            "triggered",
+            "release-mozilla-release-win32_repack"
+          ],
+          "results": [
+            0,
+            [
+
+            ]
+          ],
+          "isStarted": true,
+          "times": [
+            1365578494.367404,
+            1365578494.3691959
+          ],
+          "eta": null,
+          "urls": {
+
+          },
+          "step_number": 67,
+          "expectations": [
+            [
+              "output",
+              null,
+              null
+            ]
+          ]
+        }
+      ],
+      "sourceStamp": {
+        "repository": "",
+        "hasPatch": false,
+        "project": "",
+        "branch": "releases/mozilla-release",
+        "changes": [
+          {
+            "category": null,
+            "files": [
+              {
+                "url": null,
+                "name": "release_build"
+              }
+            ],
+            "repository": "",
+            "rev": null,
+            "who": "lsblakk@mozilla.com",
+            "when": 1365559699,
+            "number": 2290248,
+            "comments": "",
+            "project": "",
+            "at": "Tue 09 Apr 2013 19:08:19",
+            "branch": "releases/mozilla-release",
+            "revlink": "",
+            "properties": [
+              [
+                "products",
+                "Firefox",
+                "Change"
+              ],
+              [
+                "script_repo_revision",
+                "FIREFOX_20_0_1_RELEASE",
+                "Change"
+              ]
+            ],
+            "revision": null
+          }
+        ],
+        "revision": null
+      },
+      "times": [
+        "2013-04-10T02:49:52+0000",
+        "2013-04-10T07:21:34+0000"
+      ],
+      "properties": [
+        [
+          "appName",
+          "Firefox",
+          "SetProperty Step"
+        ],
+        [
+          "appVersion",
+          "20.0.1",
+          "SetProperty Step"
+        ],
+        [
+          "basedir",
+          "e:/builds/moz2_slave/rel-m-rel-w32_bld-000000000000",
+          "SetProperty Step"
+        ],
+        [
+          "branch",
+          "release-mozilla-release",
+          "Builder"
+        ],
+        [
+          "build_number",
+          1,
+          "Builder"
+        ],
+        [
+          "builddir",
+          "rel-m-rel-w32_bld-000000000000",
+          "SetProperty Step"
+        ],
+        [
+          "buildername",
+          "release-mozilla-release-win32_build",
+          "Builder"
+        ],
+        [
+          "buildid",
+          "20130409194949",
+          "SetProperty Step"
+        ],
+        [
+          "buildnumber",
+          4,
+          "Build"
+        ],
+        [
+          "builduid",
+          "e7780249d9444b86a3119605e037d64f",
+          "buildUIDSchedFunc"
+        ],
+        [
+          "comments",
+          "",
+          "Step"
+        ],
+        [
+          "completeMarUrl",
+          "http://stage.mozilla.org/pub/mozilla.org/firefox/nightly/20.0.1-candidates/build1/update/win32/en-US/firefox-20.0.1.complete.mar",
+          "MockProperty Step"
+        ],
+        [
+          "forced_clobber",
+          false,
+          "MozillaClobberer"
+        ],
+        [
+          "got_revision",
+          "5bb6421fee94",
+          "SetProperty Step"
+        ],
+        [
+          "hashType",
+          "sha512",
+          "SetProperty Step"
+        ],
+        [
+          "jsshellUrl",
+          "http://stage.mozilla.org/pub/mozilla.org/firefox/nightly/20.0.1-candidates/build1/jsshell-win32.zip",
+          "MockProperty Step"
+        ],
+        [
+          "master",
+          "http://buildbot-master25.build.scl1.mozilla.com:8001/",
+          "Step"
+        ],
+        [
+          "packageUrl",
+          "http://stage.mozilla.org/pub/mozilla.org/firefox/nightly/20.0.1-candidates/build1/win32/en-US/firefox-20.0.1.zip",
+          "MockProperty Step"
+        ],
+        [
+          "partialMarUrl",
+          "http://stage.mozilla.org/pub/mozilla.org/firefox/nightly/20.0.1-candidates/build1/update/win32/en-US/firefox-18.0.2-20.0.1.partial.mar",
+          "MockProperty Step"
+        ],
+        [
+          "periodic_clobber",
+          false,
+          "MozillaClobberer"
+        ],
+        [
+          "platform",
+          "win32",
+          "Builder"
+        ],
+        [
+          "product",
+          "Firefox",
+          "Builder"
+        ],
+        [
+          "products",
+          "Firefox",
+          "Change"
+        ],
+        [
+          "project",
+          "",
+          "Build"
+        ],
+        [
+          "purge_actual",
+          "74.52GB",
+          "SetProperty Step"
+        ],
+        [
+          "purge_target",
+          "10GB",
+          "SetProperty Step"
+        ],
+        [
+          "purged_clobber",
+          true,
+          "MozillaClobberer"
+        ],
+        [
+          "repository",
+          "",
+          "Build"
+        ],
+        [
+          "revision",
+          "None",
+          "Source"
+        ],
+        [
+          "scheduler",
+          "release-mozilla-release-firefox_build",
+          "Scheduler"
+        ],
+        [
+          "script_repo_revision",
+          "FIREFOX_20_0_1_RELEASE",
+          "Change"
+        ],
+        [
+          "slavebuilddir",
+          "rel-m-rel-w32_bld-000000000000",
+          "Builder"
+        ],
+        [
+          "slavename",
+          "w64-ix-slave72",
+          "BuildSlave"
+        ],
+        [
+          "symbolsUrl",
+          "http://stage.mozilla.org/pub/mozilla.org/firefox/nightly/20.0.1-candidates/build1/win32/en-US/firefox-20.0.1.crashreporter-symbols.zip",
+          "MockProperty Step"
+        ],
+        [
+          "testsUrl",
+          "http://stage.mozilla.org/pub/mozilla.org/firefox/nightly/20.0.1-candidates/build1/win32/en-US/firefox-20.0.1.tests.zip",
+          "MockProperty Step"
+        ],
+        [
+          "toolsdir",
+          "e:/builds/moz2_slave/rel-m-rel-w32_bld-000000000000/tools",
+          "SetProperty Step"
+        ],
+        [
+          "version",
+          "20.0.1",
+          "Builder"
+        ]
+      ]
+    },
+    "results": 0
+  },
+  "_meta": {
+    "exchange": "org.mozilla.exchange.build",
+    "serializer": "json",
+    "master_name": "buildbot-master25.build.scl1.mozilla.com:/builds/buildbot/build1/master",
+    "routing_key": "build.release-mozilla-release-win32_build.4.log_uploaded",
+    "master_incarnation": "pid5196-boot1354866529",
+    "message_id": 4058,
+    "sent": "2013-04-10T00:21:46+01:00"
+  }
+}

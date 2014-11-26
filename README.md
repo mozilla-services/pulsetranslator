@@ -32,6 +32,14 @@ You can get help on other options by running
 
     runtranslator -h
 
+To test specific buildbot pulse messages, you can push a locally stored JSON
+file into the translator. It's recommended to use the --display-only option, to
+only log the final normalized message to the console.
+
+    runtranslator --display-only --push-message <path_to_json_file>
+
+Please keep in mind that in case of errors, details can be found in the specific
+log files under "logs" sub directory.
 
 Routing Keys
 ------------

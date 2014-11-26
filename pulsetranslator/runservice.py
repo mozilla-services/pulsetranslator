@@ -11,6 +11,7 @@ from mozillapulse.config import PulseConfiguration
 from daemon import createDaemon
 from pulsetranslator import PulseBuildbotTranslator
 
+
 def main():
     parser = optparse.OptionParser()
     parser.add_option('--pidfile', dest='pidfile',
@@ -41,6 +42,10 @@ def main():
                       help='optional config file containing optional sections '
                       '[consumer] and [publisher] for nondefault Pulse '
                       'configs')
+    parser.add_option('--push-message',
+                      dest='message',
+                      help='path to file of a Pulse message to process')
+
     options, args = parser.parse_args()
 
     pulse_cfgs = {'consumer': None, 'publisher': None}
@@ -65,6 +70,7 @@ def main():
 
     service = PulseBuildbotTranslator(durable=options.durable,
                                       logdir=options.logdir,
+                                      message=options.message,
                                       display_only=options.display_only,
                                       consumer_cfg=pulse_cfgs['consumer'],
                                       publisher_cfg=pulse_cfgs['publisher'])

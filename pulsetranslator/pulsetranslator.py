@@ -26,11 +26,12 @@ from translatorexceptions import (BadLocalesError, BadOSError,
 
 class PulseBuildbotTranslator(object):
 
-    def __init__(self, durable=False, logdir='logs', display_only=False,
-                 consumer_cfg=None, publisher_cfg=None):
+    def __init__(self, durable=False, logdir='logs', message=None,
+                 display_only=False, consumer_cfg=None, publisher_cfg=None):
         self.durable = durable
         self.label = 'pulse-build-translator-%s' % socket.gethostname()
         self.logdir = logdir
+        self.message = message
         self.display_only = display_only
         self.consumer_cfg = consumer_cfg
         self.publisher_cfg = publisher_cfg
@@ -60,6 +61,13 @@ class PulseBuildbotTranslator(object):
         return logger
 
     def start(self):
+        if self.message:
+            # handle a test message
+            json_data = open(self.message)
+            data = json.load(json_data)
+            self.on_pulse_message(data)
+            return
+
         # Start listening for pulse messages. If 5 failures in a
         # minute, wait 5 minutes before retrying.
         failures = []
