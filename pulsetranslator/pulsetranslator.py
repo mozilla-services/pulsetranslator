@@ -402,6 +402,9 @@ class PulseBuildbotTranslator(object):
                     if 'repack' in key:
                         builddata['repack'] = True
 
+                        if not builddata["locales"]:
+                            raise BadPulseMessageError(key, 'no "locales" property')
+
                         for locale in builddata["locales"].split(','):
                             if not locale:
                                 raise BadLocalesError(key, builddata["locales"])
