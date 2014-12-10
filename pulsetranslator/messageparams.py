@@ -62,6 +62,9 @@ platforms = {
     'android-armv6': ['ubuntu64_vm_armv6_mobile', 'ubuntu64_vm_armv6_large'],
     'android-x86': ['android-x86', 'ubuntu64_hw'],
     'android': ['panda_android', 'ubuntu64_vm_mobile', 'ubuntu64_vm_large'],
+    'android-api-9': ['ubuntu64_vm_mobile', 'ubuntu64_vm_large'],
+    'android-api-10': ['panda_android'],
+    'android-api-11': ['panda_android'],
     'ics_armv7a_gecko': ['ubuntu64-b2g'],
 }
 
