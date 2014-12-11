@@ -259,6 +259,10 @@ class PulseBuildbotTranslator(object):
                 elif prop[0] == 'slavename':
                     builddata['slave'] = prop[1]
 
+                # look for blobber files
+                elif prop[0] == 'blobber_files':
+                    builddata['blobber_files'] = prop[1]
+
                 # look for stage_platform
                 elif prop[0] == 'stage_platform':
                     # For some messages, the platform we really care about
