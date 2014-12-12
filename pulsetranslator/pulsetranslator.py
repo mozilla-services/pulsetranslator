@@ -175,29 +175,29 @@ class PulseBuildbotTranslator(object):
 
             # scan the payload for properties applicable to both tests and
             # builds
-            for property in data['payload']['build']['properties']:
+            for prop in data['payload']['build']['properties']:
 
                 # look for the job number
-                if property[0] == 'buildnumber':
-                    builddata['job_number'] = property[1]
+                if prop[0] == 'buildnumber':
+                    builddata['job_number'] = prop[1]
 
                 # look for revision
-                if property[0] == 'revision':
-                    builddata['revision'] = property[1]
+                if prop[0] == 'revision':
+                    builddata['revision'] = prop[1]
 
                 # look for product
-                elif property[0] == 'product':
+                elif prop[0] == 'product':
                     # Bug 1010120:
                     # Ensure to lowercase to prevent issues with capitalization
-                    builddata['product'] = property[1].lower()
+                    builddata['product'] = prop[1].lower()
 
                 # look for version
-                elif property[0] == 'version':
-                    builddata['version'] = property[1]
+                elif prop[0] == 'version':
+                    builddata['version'] = prop[1]
 
                 # look for tree
-                elif property[0] == 'branch':
-                    builddata['tree'] = property[1]
+                elif prop[0] == 'branch':
+                    builddata['tree'] = prop[1]
                     # For builds, this property is sometimes a relative path,
                     # ('releases/mozilla-beta') and not just a name.  For
                     # consistency, we'll strip the path components.
@@ -205,21 +205,21 @@ class PulseBuildbotTranslator(object):
                         builddata['tree'] = os.path.basename(builddata['tree'])
 
                 # look for buildid
-                elif property[0] == 'buildid':
-                    builddata['buildid'] = property[1]
-                    date, builddata['builddate'] = self.buildid2date(property[1])
+                elif prop[0] == 'buildid':
+                    builddata['buildid'] = prop[1]
+                    date, builddata['builddate'] = self.buildid2date(prop[1])
 
                 # look for the build number which comes with candidate builds
-                elif property[0] == 'build_number':
-                    builddata['build_number'] = property[1]
+                elif prop[0] == 'build_number':
+                    builddata['build_number'] = prop[1]
 
                 # look for the previous buildid
-                elif property[0] == 'previous_buildid':
-                    builddata['previous_buildid'] = property[1]
+                elif prop[0] == 'previous_buildid':
+                    builddata['previous_buildid'] = prop[1]
 
                 # look for platform
-                elif property[0] == 'platform':
-                    builddata['platform'] = property[1]
+                elif prop[0] == 'platform':
+                    builddata['platform'] = prop[1]
                     if (builddata['platform'] and
                         '-debug' in builddata['platform']):
                         # strip '-debug' from the platform string if it's
@@ -228,46 +228,50 @@ class PulseBuildbotTranslator(object):
                             0:builddata['platform'].find('-debug')]
 
                 # look for the locale
-                elif property[0] == 'locale':
-                    builddata['locale'] = property[1]
+                elif prop[0] == 'locale':
+                    builddata['locale'] = prop[1]
 
                 # look for the locale
-                elif property[0] == 'locales':
-                    builddata['locales'] = property[1]
+                elif prop[0] == 'locales':
+                    builddata['locales'] = prop[1]
 
                 # look for build url
-                elif property[0] in ['packageUrl', 'build_url', 'fileURL']:
-                    builddata['buildurl'] = property[1]
+                elif prop[0] in ['packageUrl', 'build_url', 'fileURL']:
+                    builddata['buildurl'] = prop[1]
 
                 # look for log url
-                elif property[0] == 'log_url':
-                    builddata['logurl'] = property[1]
+                elif prop[0] == 'log_url':
+                    builddata['logurl'] = prop[1]
 
                 # look for release name
-                elif property[0] in ['en_revision', 'script_repo_revision']:
-                    builddata['release'] = property[1]
+                elif prop[0] in ['en_revision', 'script_repo_revision']:
+                    builddata['release'] = prop[1]
 
                 # look for tests url
-                elif property[0] == 'testsUrl':
-                    builddata['testsurl'] = property[1]
+                elif prop[0] == 'testsUrl':
+                    builddata['testsurl'] = prop[1]
 
                 # look for buildername
-                elif property[0] == 'buildername':
-                    builddata['buildername'] = property[1]
+                elif prop[0] == 'buildername':
+                    builddata['buildername'] = prop[1]
 
                 # look for slave builder
-                elif property[0] == 'slavename':
-                    builddata['slave'] = property[1]
+                elif prop[0] == 'slavename':
+                    builddata['slave'] = prop[1]
+
+                # look for blobber files
+                elif prop[0] == 'blobber_files':
+                    builddata['blobber_files'] = prop[1]
 
                 # look for stage_platform
-                elif property[0] == 'stage_platform':
+                elif prop[0] == 'stage_platform':
                     # For some messages, the platform we really care about
                     # is in the 'stage_platform' property, not the 'platform'
                     # property.
-                    stage_platform = property[1]
-                    for type in messageparams.buildtypes:
-                        if type in stage_platform:
-                            stage_platform = stage_platform[0:stage_platform.find(type) - 1]
+                    stage_platform = prop[1]
+                    for buildtype in messageparams.buildtypes:
+                        if buildtype in stage_platform:
+                            stage_platform = stage_platform[0:stage_platform.find(buildtype) - 1]
 
             if not builddata['tree']:
                 raise BadPulseMessageError(key, "no 'branch' property")
