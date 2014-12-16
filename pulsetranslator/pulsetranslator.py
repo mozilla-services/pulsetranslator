@@ -261,7 +261,11 @@ class PulseBuildbotTranslator(object):
 
                 # look for blobber files
                 elif prop[0] == 'blobber_files':
-                    builddata['blobber_files'] = prop[1]
+                    try:
+                        builddata['blobber_files'] = json.loads(prop[1])
+                    except ValueError:
+                        self.error_logger.exception(
+                            "Malformed `blobber_files` buildbot property: {}".format(prop[1]))
 
                 # look for stage_platform
                 elif prop[0] == 'stage_platform':
