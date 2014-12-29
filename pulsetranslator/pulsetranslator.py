@@ -277,6 +277,12 @@ class PulseBuildbotTranslator(object):
                         if buildtype in stage_platform:
                             stage_platform = stage_platform[0:stage_platform.find(buildtype) - 1]
 
+                elif prop[0] == 'completeMarUrl':
+                    builddata['completemarurl'] = prop[1]
+
+                elif prop[0] == 'completeMarHash':
+                    builddata['completemarhash'] = prop[1]
+
             if not builddata['tree']:
                 raise BadPulseMessageError(key, "no 'branch' property")
 
@@ -431,4 +437,3 @@ class PulseBuildbotTranslator(object):
                                                            indent=2))
         except Exception:
             self.error_logger.exception(json.dumps(data, indent=2))
-
