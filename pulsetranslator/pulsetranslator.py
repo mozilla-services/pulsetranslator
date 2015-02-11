@@ -307,12 +307,7 @@ class PulseBuildbotTranslator(object):
             match = unittestRe.match(key)
             if match:
                 # for unittests, generate some metadata by parsing the key
-
-                if match.groups()[7] == 'finished':
-                    # Ignore this message, we only care about 'log_uploaded'
-                    # messages for unittests.
-                    return
-
+                #
                 # The 'short_builder' string is quite arbitrary, and so this
                 # code is expected to be fragile, and will likely need
                 # frequent maintenance to deal with future changes to this
@@ -372,11 +367,6 @@ class PulseBuildbotTranslator(object):
                                      (builddata['tree'], builddata['platform']))
                 match = otherRe.match(key)
                 if match:
-                    if 'finished' in match.group(9):
-                        # Ignore this message, we only care about 'log_uploaded'
-                        # messages for builds
-                        return
-
                     builddata['tags'] = match.group(7).replace('_', '-').split('-')
 
                     # There are some tags we don't care about as tags,
