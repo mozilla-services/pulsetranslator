@@ -441,8 +441,9 @@ class PulseBuildbotTranslator(object):
                 else:
                     raise BadPulseMessageError(key, "unknown message type")
 
-        except BadPulseMessageError:
+        except BadPulseMessageError as inst:
             self.bad_pulse_msg_logger.exception(json.dumps(data.get('payload'),
                                                            indent=2))
+            print(inst.__class__, str(inst))
         except Exception:
             self.error_logger.exception(json.dumps(data, indent=2))
