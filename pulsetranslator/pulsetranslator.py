@@ -42,16 +42,17 @@ class PulseBuildbotTranslator(object):
         self.bad_pulse_msg_logger = self.get_logger('BadPulseMessage',
                                                     'bad_pulse_message.log')
 
-        self.error_logger = self.get_logger('ErrorLog', 'error.log')
-        handler = logging.StreamHandler()
-        self.error_logger.addHandler(handler)
+        self.error_logger = self.get_logger('ErrorLog',
+                                            'error.log',
+                                            stderr=True)
 
         loghandler_error_logger = self.get_logger('LogHandlerErrorLog',
-                                                  'log_handler_error.log')
+                                                  'log_handler_error.log',
+                                                  stderr=True)
         self.loghandler = LogHandler(loghandler_error_logger,
                                      self.publisher_cfg)
 
-    def get_logger(self, name, filename):
+    def get_logger(self, name, filename, stderr=False):
         filepath = os.path.join(self.logdir, filename)
         logger = logging.getLogger(name)
         logger.setLevel(logging.DEBUG)
@@ -61,6 +62,11 @@ class PulseBuildbotTranslator(object):
             "%(asctime)s - %(levelname)s: %(message)s", "%Y-%m-%d %H:%M:%S")
         handler.setFormatter(formatter)
         logger.addHandler(handler)
+
+        if stderr:
+            handler = logging.StreamHandler()
+            logger.addHandler(handler)
+
         return logger
 
     def start(self):
