@@ -41,7 +41,10 @@ class PulseBuildbotTranslator(object):
 
         self.bad_pulse_msg_logger = self.get_logger('BadPulseMessage',
                                                     'bad_pulse_message.log')
+
         self.error_logger = self.get_logger('ErrorLog', 'error.log')
+        handler = logging.StreamHandler()
+        self.error_logger.addHandler(handler)
 
         loghandler_error_logger = self.get_logger('LogHandlerErrorLog',
                                                   'log_handler_error.log')
