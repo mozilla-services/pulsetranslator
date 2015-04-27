@@ -58,6 +58,12 @@ def main():
         for section in pulse_cfgs.keys():
             pulse_cfgs[section] = PulseConfiguration.read_from_config(
                 pulse_cfgfile, section)
+        if os.env.get('pulseuser'):
+          pulse_cfgs['consumer']['user'] = os.env['pulseuser']
+          pulse_cfgs['publisher']['user'] = os.env['pulseuser']
+        if os.env.get('pulsepassword'):
+          pulse_cfgs['consumer']['password'] = os.env['pulsepassword']
+          pulse_cfgs['publisher']['password'] = os.env['pulsepassword']
 
     if options.daemon:
         if os.access(options.logfile, os.F_OK):
