@@ -1,0 +1,2 @@
+mozillapulse
+python-dateutil==1.5
