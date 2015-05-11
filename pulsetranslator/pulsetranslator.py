@@ -27,9 +27,11 @@ from translatorexceptions import (BadLocalesError, BadOSError,
 class PulseBuildbotTranslator(object):
 
     def __init__(self, durable=False, logdir='logs', message=None,
-                 display_only=False, consumer_cfg=None, publisher_cfg=None):
+                 display_only=False, consumer_cfg=None, publisher_cfg=None,
+                 label=None):
         self.durable = durable
-        self.label = 'pulse-build-translator-%s' % socket.gethostname()
+        self.label = 'pulse-build-translator-%s' % (label or
+                                                    socket.gethostname())
         self.logdir = logdir
         self.message = message
         self.display_only = display_only

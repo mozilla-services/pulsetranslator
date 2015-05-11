@@ -45,6 +45,9 @@ def main():
     parser.add_option('--push-message',
                       dest='message',
                       help='path to file of a Pulse message to process')
+    parser.add_option('--label',
+                      dest='label',
+                      help='label to use for pulse queue')
 
     options, args = parser.parse_args()
 
@@ -77,6 +80,7 @@ def main():
     service = PulseBuildbotTranslator(durable=options.durable,
                                       logdir=options.logdir,
                                       message=options.message,
+                                      label=options.label,
                                       display_only=options.display_only,
                                       consumer_cfg=pulse_cfgs['consumer'],
                                       publisher_cfg=pulse_cfgs['publisher'])
