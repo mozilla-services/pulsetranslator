@@ -64,7 +64,7 @@ platforms = {
     'android': ['panda_android', 'ubuntu64_vm_mobile', 'ubuntu64_vm_large'],
     'android-api-9': ['ubuntu64_vm_mobile', 'ubuntu64_vm_large'],
     'android-api-10': ['panda_android'],
-    'android-api-11': ['panda_android', 'ubuntu64_vm_armv7_large'],
+    'android-api-11': ['panda_android', 'ubuntu64_vm_armv7_large', 'ubuntu64_vm_armv7_mobile'],
     'ics_armv7a_gecko': ['ubuntu64-b2g'],
 }
 
