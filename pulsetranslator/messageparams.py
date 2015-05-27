@@ -55,7 +55,7 @@ platforms = {
     'win32_gecko': ['win32_gecko'],
     'win32-mulet': ['win32-mulet'],
     'win64': ['w764', 'win8_64'],
-    'macosx64': ['macosx64', 'snowleopard', 'leopard', 'lion', 'mountainlion'],
+    'macosx64': ['macosx64', 'snowleopard', 'leopard', 'lion', 'mountainlion', 'yosemite'],
     'macosx64_gecko': ['macosx64_gecko', 'mountainlion-b2gdt'],
     'macosx64-mulet': ['macosx64-mulet'],
     'macosx': ['macosx', 'leopard'],
