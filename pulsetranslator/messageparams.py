@@ -68,6 +68,22 @@ platforms = {
     'ics_armv7a_gecko': ['ubuntu64-b2g'],
 }
 
+ignored_platforms = [
+    'dolphin',
+    'dolphin_eng',
+    'dolphin-512',
+    'emulator-l',
+    'flame-kk',
+    'flame-kk_eng',
+    'linux64-b2g-haz',
+    'linux64-st-an',
+    'macosx64-st-an',
+    'nexus-4',
+    'nexus-4_eng',
+    'nexus-5-l',
+    'nexus-5-l_eng'
+]
+
 tags = [
         '',
         'build',
@@ -84,4 +100,9 @@ tags = [
         'warnaserr',
         'warnaserrdebug',
         'xulrunner',
+        'arm',
+        'compacting',
+        'plain',
+        'plaindebug',
+        'rootanalysis'
        ]

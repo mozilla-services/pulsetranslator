@@ -114,6 +114,8 @@ class PulseBuildbotTranslator(object):
 
     def process_unittest(self, data):
         data['insertion_time'] = calendar.timegm(time.gmtime())
+        if data['platform'] in messageparams.ignored_platforms:
+            return
         if not data.get('logurl'):
             raise NoLogUrlError(data['key'])
         if data['platform'] not in messageparams.platforms:
@@ -129,6 +131,8 @@ class PulseBuildbotTranslator(object):
         self.loghandler.handle_message(data)
 
     def process_build(self, data):
+        if data['platform'] in messageparams.ignored_platforms:
+            return
         if data['platform'] not in messageparams.platforms:
             raise BadPlatformError(data['key'], data['platform'])
         for tag in data['tags']:
