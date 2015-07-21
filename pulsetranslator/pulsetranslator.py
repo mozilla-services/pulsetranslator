@@ -177,6 +177,7 @@ class PulseBuildbotTranslator(object):
                           'locales': None,
                           'logurl': None,
                           'testsurl': None,
+                          'test_packages_url': None,
                           'release': None,
                           'buildername': None,
                           'slave': None,
@@ -265,6 +266,10 @@ class PulseBuildbotTranslator(object):
                 # look for tests url
                 elif prop[0] == 'testsUrl':
                     builddata['testsurl'] = prop[1]
+
+                # look for url to json manifest of test packages
+                elif prop[0] == 'testPackagesUrl':
+                    builddata['test_packages_url'] = prop[1]
 
                 # look for buildername
                 elif prop[0] == 'buildername':
