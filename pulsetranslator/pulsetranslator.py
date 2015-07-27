@@ -450,7 +450,7 @@ class PulseBuildbotTranslator(object):
                     else:
                         self.process_build(builddata)
                 else:
-                    raise BadPulseMessageError(key, "unknown message type")
+                    raise BadPulseMessageError(key, "unknown message type, platform: %s" % builddata.get('platform', 'unknown'))
 
         except BadPulseMessageError as inst:
             self.bad_pulse_msg_logger.exception(json.dumps(data.get('payload'),

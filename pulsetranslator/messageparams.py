@@ -104,5 +104,6 @@ tags = [
         'compacting',
         'plain',
         'plaindebug',
-        'rootanalysis'
+        'rootanalysis',
+        'sim'
        ]
