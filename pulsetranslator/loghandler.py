@@ -128,6 +128,8 @@ class LogHandler(object):
         for tag in data['tags']:
             if tag:
                 key_parts.append(tag)
+            if tag == 'l10n':
+                key_parts.append(data['locale'])
         key_parts.append(original_key)
 
         publish_message(NormalizedBuildPublisher, self.error_logger, data,

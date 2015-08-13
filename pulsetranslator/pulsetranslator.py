@@ -183,6 +183,7 @@ class PulseBuildbotTranslator(object):
                           'slave': None,
                           'repack': None,
                           'revision': None,
+                          'symbols_url': None,
                           'product': None,
                           'version': None,
                           'tree': None,
@@ -262,6 +263,10 @@ class PulseBuildbotTranslator(object):
                 # look for release name
                 elif prop[0] in ['en_revision', 'script_repo_revision']:
                     builddata['release'] = prop[1]
+
+                # look for tests url
+                elif prop[0] == 'symbolsUrl':
+                    builddata['symbols_url'] = prop[1]
 
                 # look for tests url
                 elif prop[0] == 'testsUrl':
@@ -359,16 +364,20 @@ class PulseBuildbotTranslator(object):
                     builddata['platform'] = stage_platform
 
                 self.process_unittest(builddata)
+
             elif 'source' in key:
                 # what is this?
                 # ex: build.release-mozilla-esr10-firefox_source.0.finished
                 pass
-            elif [x for x in ['schedulers', 'tag', 'submitter', 'final_verification', 'fuzzer'] if x in key]:
+
+            elif [x for x in ['schedulers', 'tag', 'submitter',
+                              'final_verification', 'fuzzer'] if x in key]:
                 # internal buildbot stuff we don't care about
                 # ex: build.release-mozilla-beta-firefox_reset_schedulers.12.finished
                 # ex: build.release-mozilla-beta-fennec_tag.40.finished
                 # ex: build.release-mozilla-beta-bouncer_submitter.46.finished
                 pass
+
             elif 'jetpack' in key:
                 # These are very awkwardly formed; i.e.
                 # build.jetpack-mozilla-central-win7-debug.18.finished,
@@ -376,6 +385,7 @@ class PulseBuildbotTranslator(object):
                 # to support these we'd have to keep a tree map of all
                 # possible trees.
                 pass
+
             else:
                 if not builddata['platform']:
                     if stage_platform:
@@ -433,7 +443,11 @@ class PulseBuildbotTranslator(object):
                     # In case of repacks we have to send multiple notifications,
                     # each for every locale included. We can remove this
                     # workaround once bug 857971 has been fixed.
-                    if 'repack' in key:
+
+                    # current release-builds have a different data structure
+                    # than nightly builds which are generated via mozharness.
+                    # This will change once bug 1142872 is fixed and active.
+                    if 'repack' in key:  # release build
                         builddata['repack'] = True
 
                         if not builddata["locales"]:
@@ -447,7 +461,20 @@ class PulseBuildbotTranslator(object):
                             data['locale'] = locale
                             self.process_build(data)
 
-                    else:
+                    elif builddata['locales']:  # nightly repack build
+                        builddata['repack'] = True
+
+                        locales = json.loads(builddata['locales'])
+                        for locale in locales:
+                            # Use all properties except the locales array
+                            data = copy.deepcopy(builddata)
+                            del data['locales']
+
+                            # Process locale
+                            data['locale'] = locale
+                            self.process_build(data)
+
+                    else:  # single locale build
                         self.process_build(builddata)
                 else:
                     raise BadPulseMessageError(key, "unknown message type, platform: %s" % builddata.get('platform', 'unknown'))
