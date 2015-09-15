@@ -3,16 +3,15 @@
 # You can obtain one at http://mozilla.org/MPL/2.0/.
 
 import calendar
-import httplib
 import json
 import time
 
-from urlparse import urlparse
+import requests
 
 from mozillapulse.publishers import NormalizedBuildPublisher
 
-from translatorexceptions import LogTimeoutError
-from translatorqueues import publish_message
+from .translatorexceptions import LogTimeoutError
+from .translatorqueues import publish_message
 
 DEBUG = False
 
@@ -26,35 +25,26 @@ class LogHandler(object):
     def get_url_info(self, url):
         """Return a (code, content_length) tuple from making an
            HTTP HEAD request for the given url.
+
         """
-
         try:
-            content_length = -1
-            p = urlparse(url)
+            resp = requests.get(url)
+            resp.raise_for_status()
 
-            if p.scheme == 'https':
-                conn = httplib.HTTPSConnection(p.netloc)
-            else:
-                conn = httplib.HTTPConnection(p.netloc)
-            conn.request('HEAD', p.path)
-            res = conn.getresponse()
-            code = res.status
+            # In case of a redirect make another head request for the new location.
+            if resp.status_code == 301:
+                resp = requests.head(resp.headers['location'])
+                resp.raise_for_status()
 
-            if code == 200:
-                for header in res.getheaders():
-                    if header[0] == 'content-length':
-                        content_length = int(header[1])
+            return (resp.status_code, resp.headers.get('Content-length'))
 
-            return (code, content_length)
-
-        except AttributeError:
-            # this can happen when we didn't get a valid url from pulse
+        except (requests.exceptions.RequestException, IOError) as e:
+            self.error_logger.error('HEAD request for {} failed with "{}".'.format(url, e))
             return (-1, -1)
 
         except Exception:
-            # XXX: something bad happened; we should log this
-            # return (-1, -1)
-            raise
+            self.error_logger.exception('Unknown failure.')
+            return (-1, -1)
 
     def process_data(self, data, publish_method):
         """
@@ -74,7 +64,8 @@ class LogHandler(object):
         while True:
             now = calendar.timegm(time.gmtime())
 
-            code, content_length = self.get_url_info(str(data['logurl']))
+            (code, content_length) = self.get_url_info(str(data['logurl']))
+
             if DEBUG:
                 if retrying:
                     print '...reprocessing logfile', code, data.get('logurl')
