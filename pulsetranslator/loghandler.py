@@ -10,8 +10,8 @@ import requests
 
 from mozillapulse.publishers import NormalizedBuildPublisher
 
-from .translatorexceptions import LogTimeoutError
-from .translatorqueues import publish_message
+from translatorexceptions import LogTimeoutError
+from translatorqueues import publish_message
 
 DEBUG = False
 
