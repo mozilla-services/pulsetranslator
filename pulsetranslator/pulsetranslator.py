@@ -15,6 +15,7 @@ import time
 
 from dateutil.parser import parse
 from mozillapulse import consumers
+import requests
 
 import messageparams
 
@@ -314,6 +315,21 @@ class PulseBuildbotTranslator(object):
             # If no locale is given fallback to en-US
             if not builddata['locale']:
                 builddata['locale'] = 'en-US'
+
+            # Release build notifications do not contain a revision.
+            # Lets fetch it via the release tag and the hg.m.o REST API
+            if builddata['tree'].startswith('release-') and builddata['revision'] in [None, 'None']:
+                try:
+                    url = 'https://hg.mozilla.org/releases/{tree}/json-rev/{release_tag}'.format(
+                        tree=builddata['tree'].split('release-')[1],
+                        release_tag=builddata['release']
+                    )
+                    response = requests.get(url)
+                    builddata['revision'] = response.json()['node']
+                except Exception:
+                    # We cannot raise an exception due to a broken release rev for repacks
+                    # https://bugzilla.mozilla.org/show_bug.cgi?id=1219432#c1
+                    pass
 
             # status of the build or test notification
             # see http://hg.mozilla.org/build/buildbot/file/08b7c51d2962/master/buildbot/status/builder.py#l25
