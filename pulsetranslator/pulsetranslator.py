@@ -440,11 +440,10 @@ class PulseBuildbotTranslator(object):
                             (builddata['tree'], builddata['platform'],
                              builddata['buildid']))
 
-                    # In case of repacks we have to send multiple notifications,
-                    # each for every locale included. We can remove this
-                    # workaround once bug 857971 has been fixed.
+                    # In case of repack messages we have to send multiple
+                    # notifications, each for every locale included.
 
-                    # current release-builds have a different data structure
+                    # Current release-builds have a different data structure
                     # than nightly builds which are generated via mozharness.
                     # This will change once bug 1142872 is fixed and active.
                     if 'repack' in key:  # release build
@@ -465,10 +464,16 @@ class PulseBuildbotTranslator(object):
                         builddata['repack'] = True
 
                         locales = json.loads(builddata['locales'])
-                        for locale in locales:
+                        for locale, result in locales.iteritems():
                             # Use all properties except the locales array
                             data = copy.deepcopy(builddata)
                             del data['locales']
+
+                            # Update overall status of the new message based on the locale status.
+                            # Given that there are no clear result values, lets take the values
+                            # from buildbot status: 0 = Success, 2 = Failed
+                            status = str(result).lower() == "success" or str(result) == '0'
+                            data['status'] = 0 if status else 2
 
                             # Process locale
                             data['locale'] = locale
