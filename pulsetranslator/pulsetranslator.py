@@ -320,12 +320,24 @@ class PulseBuildbotTranslator(object):
             # Lets fetch it via the release tag and the hg.m.o REST API
             if builddata['tree'].startswith('release-') and builddata['revision'] in [None, 'None']:
                 try:
-                    url = 'https://hg.mozilla.org/releases/{tree}/json-rev/{release_tag}'.format(
-                        tree=builddata['tree'].split('release-')[1],
-                        release_tag=builddata['release']
-                    )
+                    # Map for platforms which change their id
+                    platform_map = {
+                        'linux': 'linux-i686',
+                        'linux64': 'linux-x86_64',
+                        'macosx64': 'mac',
+                    }
+
+                    url = 'http://archive.mozilla.org/pub/{product}/candidates/{version}-' \
+                          'candidates/build{build_number}/{platform}/en-US/firefox-' \
+                          '{version}.json'.format(
+                              product=builddata['product'],
+                              version=builddata['version'],
+                              build_number=builddata['build_number'],
+                              platform=platform_map.get(builddata['platform'],
+                                                        builddata['platform']),
+                          )
                     response = requests.get(url)
-                    builddata['revision'] = response.json()['node']
+                    builddata['revision'] = response.json()['moz_source_stamp']
                 except Exception:
                     # We cannot raise an exception due to a broken release rev for repacks
                     # https://bugzilla.mozilla.org/show_bug.cgi?id=1219432#c1
