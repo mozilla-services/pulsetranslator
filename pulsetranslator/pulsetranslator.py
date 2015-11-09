@@ -325,6 +325,8 @@ class PulseBuildbotTranslator(object):
                         'linux': 'linux-i686',
                         'linux64': 'linux-x86_64',
                         'macosx64': 'mac',
+                        'win32': 'win32',
+                        'win64': 'win64',
                     }
 
                     url = 'http://archive.mozilla.org/pub/{product}/candidates/{version}-' \
