@@ -12,6 +12,7 @@ import os
 import re
 import socket
 import time
+import urllib2
 
 from dateutil.parser import parse
 from mozillapulse import consumers
@@ -54,6 +55,10 @@ class PulseBuildbotTranslator(object):
                                                   stderr=True)
         self.loghandler = LogHandler(loghandler_error_logger,
                                      self.publisher_cfg)
+
+    def _quote_url(self, url):
+        # Bug 1229761: URLs in build messages are not quoted and will cause bustage in mozharness
+        return urllib2.quote(url, ':/') if url is not None else url
 
     def get_logger(self, name, filename, stderr=False):
         filepath = os.path.join(self.logdir, filename)
@@ -255,11 +260,11 @@ class PulseBuildbotTranslator(object):
 
                 # look for build url
                 elif prop[0] in ['packageUrl', 'build_url', 'fileURL']:
-                    builddata['buildurl'] = prop[1]
+                    builddata['buildurl'] = self._quote_url(prop[1])
 
                 # look for log url
                 elif prop[0] == 'log_url':
-                    builddata['logurl'] = prop[1]
+                    builddata['logurl'] = self._quote_url(prop[1])
 
                 # look for release name
                 elif prop[0] in ['en_revision', 'script_repo_revision']:
@@ -267,15 +272,15 @@ class PulseBuildbotTranslator(object):
 
                 # look for tests url
                 elif prop[0] == 'symbolsUrl':
-                    builddata['symbols_url'] = prop[1]
+                    builddata['symbols_url'] = self._quote_url(prop[1])
 
                 # look for tests url
                 elif prop[0] == 'testsUrl':
-                    builddata['testsurl'] = prop[1]
+                    builddata['testsurl'] = self._quote_url(prop[1])
 
                 # look for url to json manifest of test packages
                 elif prop[0] == 'testPackagesUrl':
-                    builddata['test_packages_url'] = prop[1]
+                    builddata['test_packages_url'] = self._quote_url(prop[1])
 
                 # look for buildername
                 elif prop[0] == 'buildername':
