@@ -58,7 +58,7 @@ class PulseBuildbotTranslator(object):
 
     def _quote_url(self, url):
         # Bug 1229761: URLs in build messages are not quoted and will cause bustage in mozharness
-        return urllib2.quote(url, ':/') if url is not None else url
+        return urllib2.quote(url, safe='%/:=&?~#+!$,;\'@()*[]|') if url is not None else url
 
     def get_logger(self, name, filename, stderr=False):
         filepath = os.path.join(self.logdir, filename)
