@@ -111,12 +111,14 @@ class PulseBuildbotTranslator(object):
                 time.sleep(5 * 60)
 
     def buildid2date(self, string):
-        """Takes a buildid string and returns a python datetime and
-           seconds since epoch.
+        """Takes a buildid string and returns seconds since epoch.
         """
 
-        date = parse(string)
-        return (date, int(time.mktime(date.timetuple())))
+        try:
+            date = parse(string)
+            return int(time.mktime(date.timetuple()))
+        except ValueError:
+            return int(string)
 
     def process_unittest(self, data):
         data['insertion_time'] = calendar.timegm(time.gmtime())
@@ -230,7 +232,7 @@ class PulseBuildbotTranslator(object):
                 # look for buildid
                 elif prop[0] == 'buildid':
                     builddata['buildid'] = prop[1]
-                    date, builddata['builddate'] = self.buildid2date(prop[1])
+                    builddata['builddate'] = self.buildid2date(prop[1])
 
                 # look for the build number which comes with candidate builds
                 elif prop[0] == 'build_number':

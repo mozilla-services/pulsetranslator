@@ -32,6 +32,7 @@ def convert_os(data):
 
 os_conversions = {
     'leopard-o': lambda x: 'leopard',
+    'yosemite_r7': lambda x: 'yosemite',
     'tegra_android-o': lambda x: 'tegra_android',
     'macosx': convert_os,
     'macosx64': convert_os,
