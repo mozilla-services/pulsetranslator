@@ -52,7 +52,7 @@ platforms = {
     'linuxqt': ['fedora'],
     'linux-rpm': ['fedora'],
     'linux': ['fedora', 'linux', 'ubuntu32', 'ubuntu32_vm', 'ubuntu32_hw'],
-    'win32': ['xp', 'win7', 'win8', 'win7-ix', 'xp-ix'],
+    'win32': ['xp', 'win7', 'win8', 'win7-ix', 'xp-ix', 'win7_ix'],
     'win32_gecko': ['win32_gecko'],
     'win32-mulet': ['win32-mulet'],
     'win64': ['w764', 'win8_64'],
