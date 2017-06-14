@@ -75,6 +75,6 @@ find it easier to use [pulsebuildmonitor][], which can filter messages
 for you based on a number of criteria.  See the [pulsebuildmonitor README][]
 for more details.
 
-[configuration options]: https://hg.mozilla.org/automation/mozillapulse/file/tip/mozillapulse/config.py
+[configuration options]: https://github.com/mozilla-services/mozillapulse/blob/master/mozillapulse/config.py
 [pulsebuildmonitor]: http://hg.mozilla.org/automation/pulsebuildmonitor
 [pulsebuildmonitor README]: http://hg.mozilla.org/automation/pulsebuildmonitor/file/tip/README.txt
